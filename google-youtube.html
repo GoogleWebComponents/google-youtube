@@ -1,0 +1,59 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+Element providing YouTube video playback.
+
+##### Example
+
+    <google-youtube videoId="mN7IAaRdi_k"></google-youtube>
+
+@element google-youtube
+@blurb Element providing YouTube video playback.
+@status alpha
+@url github.io
+-->
+<polymer-element name="google-youtube" attributes="videoId">
+  <template>
+    <link href="google-youtube.css" rel="stylesheet" />
+
+    <content>
+      <div id="player"></div>
+    </content>
+  </template>
+
+  <script>
+    if (window.YT && window.YT.Player) {
+      initPolymer();
+    } else {
+      var tag = document.createElement('script');
+      tag.src = '//www.youtube.com/iframe_api';
+      document.head.appendChild(tag);
+
+      var existingYouTubeIframeAPIReadyCallback = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = function() {
+        initPolymer();
+
+        if (existingYouTubeIframeAPIReadyCallback) {
+          existingYouTubeIframeAPIReadyCallback();
+        }
+      };
+    }
+
+    function initPolymer() {
+      Polymer('google-youtube', {
+        ready: function() {
+          new YT.Player(this.$.player, {
+            videoId: this.videoId,
+            width: '480px',
+            height: '270px',
+            playerVars: {
+              autohide: 1,
+              controls: 2,
+              playsinline: 1
+            }
+          });
+        }
+      });
+    }
+  </script>
+</polymer-element>

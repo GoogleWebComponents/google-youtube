@@ -1,0 +1,7 @@
+{
+  "name": "google-youtube",
+  "private": true,
+  "dependencies": {
+    "polymer": "Polymer/polymer#master"
+  }
+}
