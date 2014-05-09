@@ -41,8 +41,34 @@ Element providing YouTube video playback.
 
     function initPolymer() {
       Polymer('google-youtube', {
+        videoId: 'mN7IAaRdi_k',
+
+        videoIdChanged: function() {
+          this.player.loadVideoById(this.videoId);
+        },
+
+        play: function() {
+          this.player.playVideo();
+        },
+
+        pause: function() {
+          this.player.pauseVideo();
+        },
+
+        seekTo: function(seconds) {
+          this.player.seekTo(seconds);
+        },
+
         ready: function() {
-          new YT.Player(this.$.player, {
+          var that = this;
+          var eventProxyFunctions = {};
+          ['onReady', 'onStateChange', 'onError'].forEach(function(eventName) {
+            eventProxyFunctions[eventName] = function(e) {
+              that.fire(eventName, e);
+            };
+          });
+
+          this.player = new YT.Player(this.$.player, {
             videoId: this.videoId,
             width: '480px',
             height: '270px',
@@ -50,7 +76,8 @@ Element providing YouTube video playback.
               autohide: 1,
               controls: 2,
               playsinline: 1
-            }
+            },
+            events: eventProxyFunctions
           });
         }
       });

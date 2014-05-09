@@ -1,18 +1,59 @@
 <!doctype html>
 <html>
-<head>
+  <head>
+    <title>google-youtube Demo</title>
+    <script src="../platform/platform.js"></script>
+    <link rel="import" href="google-youtube.html">
 
-  <title>google-youtube Demo</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background: rgba(204, 204, 204, 0.31);
+      }
+    </style>
+  </head>
 
-  <script src="../platform/platform.js"></script>
-  <link rel="import" href="google-youtube.html">
+  <body unresolved>
+    <p>A <code>google-youtube</code> looks like this:</p>
+    <google-youtube videoId="mN7IAaRdi_k"></google-youtube>
 
-</head>
-<body unresolved>
+    <div>
+      <input id="play-video" type="button" value="Play">
+      <input id="pause-video" type="button" value="Pause">
+    </div>
 
-  <p>A `google-youtube` looks like this:</p>
+    <div>
+      <label for="video-id">Video ID:</label>
+      <input id="video-id" type="text" value="M7lc1UVf-VE">
+      <input id="load-video" type="button" value="Load">
+    </div>
 
-  <google-youtube videoId="mN7IAaRdi_k"></google-youtube>
+    <div>
+      <p>Player Events:</p>
+      <ul id="event-list"></ul>
+    </div>
 
-</body>
+    <script>
+      var googleYouTubeElement = document.querySelector('google-youtube');
+      var eventListElement = document.getElementById('event-list');
+
+      document.getElementById('play-video').addEventListener('click', function() {
+        googleYouTubeElement.play();
+      });
+
+      document.getElementById('pause-video').addEventListener('click', function() {
+        googleYouTubeElement.pause();
+      });
+
+      document.getElementById('load-video').addEventListener('click', function() {
+        googleYouTubeElement.videoId = document.getElementById('video-id').value;
+      });
+
+      googleYouTubeElement.addEventListener('onStateChange', function(e) {
+        var liElement = document.createElement('li');
+        liElement.textContent = 'New State: ' + e.detail.data;
+        eventListElement.appendChild(liElement);
+      });
+    </script>
+  </body>
 </html>
