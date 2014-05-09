@@ -68,15 +68,23 @@ Element providing YouTube video playback.
             };
           });
 
+          var playerVars = {
+            autohide: 1,
+            controls: 2,
+            playsinline: 1
+          };
+          for (var i = 0; i < this.attributes.length; i++) {
+            var attribute = this.attributes[i];
+            if (attribute.nodeName.toLowerCase() != 'videoid') {
+              playerVars[attribute.nodeName] = attribute.value;
+            }
+          }
+
           this.player = new YT.Player(this.$.player, {
             videoId: this.videoId,
             width: '480px',
             height: '270px',
-            playerVars: {
-              autohide: 1,
-              controls: 2,
-              playsinline: 1
-            },
+            playerVars: playerVars,
             events: eventProxyFunctions
           });
         }
