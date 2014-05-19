@@ -1,94 +1,158 @@
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../google-apis/google-apis.html">
 
 <!--
-Element providing YouTube video playback.
+`google-youtube` encapsulates the YouTube player into a web component.
 
-##### Example
+    <google-youtube
+      videoId="mN7IAaRdi_k"
+      height="270px"
+      width="480px"
+      rel=0
+      start=5
+      autoplay=1>
+    </google-youtube>
 
-    <google-youtube videoId="mN7IAaRdi_k"></google-youtube>
+`google-youtube` supports the full list of embedded player parameters documented at
+https://developers.google.com/youtube/player_parameters
+Each can be set as an attribute on `google-youtube`.
+
+The standard set of events, documented at
+https://developers.google.com/youtube/iframe_api_reference#Events
+are exposed, as well as methods for playing, pausing, seeking to a specific time,
+and loading a new video.
 
 @element google-youtube
 @blurb Element providing YouTube video playback.
 @status alpha
-@url github.io
+@url jeffposnick.github.io/google-youtube
 -->
 <polymer-element name="google-youtube" attributes="videoId">
   <template>
     <link href="google-youtube.css" rel="stylesheet" />
 
+    <google-youtube-api on-api-load="{{apiLoad}}"></google-youtube-api>
+    
     <content>
       <div id="player"></div>
     </content>
   </template>
 
   <script>
-    if (window.YT && window.YT.Player) {
-      initPolymer();
-    } else {
-      var tag = document.createElement('script');
-      tag.src = '//www.youtube.com/iframe_api';
-      document.head.appendChild(tag);
+    Polymer('google-youtube', {
+      /**
+       * Fired when the YT.Player object is ready to be used.
+       * The object is exposed via <code>this.player</code>.
+       *
+       * @event onReady
+       */
 
-      var existingYouTubeIframeAPIReadyCallback = window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady = function() {
-        initPolymer();
+      /**
+       * Fired when the state of the player changes. See
+       * <a href="https://developers.google.com/youtube/iframe_api_reference#onStateChange">the documentation</a>
+       * for a list of possible state values, exposed in <code>e.detail.data</code>.
+       *
+       * @event onStateChange
+       * @param {Object} e Event parameters.
+       */
 
-        if (existingYouTubeIframeAPIReadyCallback) {
-          existingYouTubeIframeAPIReadyCallback();
-        }
-      };
-    }
+      /**
+       * Fired when playback fails due to an error. See
+       * <a href="https://developers.google.com/youtube/iframe_api_reference#onError">the documentation</a>
+       * for a list of error values, exposed in <code>e.detail.data</code>.
+       *
+       * @event onError
+       * @param {Object} e Event parameters.
+       */
 
-    function initPolymer() {
-      Polymer('google-youtube', {
-        videoId: 'mN7IAaRdi_k',
+      /**
+       * Sets the id of the video to play. Changing this attribute will trigger a call
+       * to load a new video into the player.
+       *
+       * See <a href="https://developers.google.com/youtube/iframe_api_reference#Loading_a_Video_Player">the documentation</a> for more details.
+       *
+       * @attribute type
+       * @type string
+       */
+      videoId: 'mN7IAaRdi_k',
 
-        videoIdChanged: function() {
-          this.player.loadVideoById(this.videoId);
-        },
+      /**
+       * Sets the height of the player on the page.
+       *
+       * @attribute type
+       * @type string
+       */
+      height: '270px',
 
-        play: function() {
-          this.player.playVideo();
-        },
+      /**
+       * Sets the width of the player on the page.
+       *
+       * @attribute type
+       * @type string
+       */
+      width: '480px',
 
-        pause: function() {
-          this.player.pauseVideo();
-        },
+      /**
+       * Plays the current video.
+       */
+      play: function() {
+        this.player.playVideo();
+      },
 
-        seekTo: function(seconds) {
-          this.player.seekTo(seconds);
-        },
+      /**
+       * Pauses the current video.
+       */
+      pause: function() {
+        this.player.pauseVideo();
+      },
 
-        ready: function() {
-          var that = this;
-          var eventProxyFunctions = {};
-          ['onReady', 'onStateChange', 'onError'].forEach(function(eventName) {
-            eventProxyFunctions[eventName] = function(e) {
-              that.fire(eventName, e);
-            };
-          });
+      /**
+       * Skips ahead (or back) to the specified number of seconds.
+       * See <a href="https://developers.google.com/youtube/iframe_api_reference#seekTo">the documentation</a> for more details.
+       *
+       * @param {number} seconds Number of seconds to seek to.
+       */
+      seekTo: function(seconds) {
+        this.player.seekTo(seconds, true);
+      },
 
-          var playerVars = {
-            autohide: 1,
-            controls: 2,
-            playsinline: 1
+      videoIdChanged: function() {
+        this.player.loadVideoById(this.videoId);
+      },
+
+      player: null,
+
+      apiLoad: function() {
+        var that = this;
+        var eventProxyFunctions = {};
+        ['onReady', 'onStateChange', 'onError'].forEach(function(eventName) {
+          eventProxyFunctions[eventName] = function(e) {
+            that.fire(eventName, e);
           };
-          for (var i = 0; i < this.attributes.length; i++) {
-            var attribute = this.attributes[i];
-            if (attribute.nodeName.toLowerCase() != 'videoid') {
-              playerVars[attribute.nodeName] = attribute.value;
-            }
-          }
+        });
 
-          this.player = new YT.Player(this.$.player, {
-            videoId: this.videoId,
-            width: '480px',
-            height: '270px',
-            playerVars: playerVars,
-            events: eventProxyFunctions
-          });
+        // Establish some defaults. Attributes set on the google-youtube element
+        // can override defaults, or specify addtional player parameters. See
+        // https://developers.google.com/youtube/player_parameters
+        var playerVars = {
+          autohide: 1,
+          controls: 2,
+          playsinline: 1
+        };
+        for (var i = 0; i < this.attributes.length; i++) {
+          var attribute = this.attributes[i];
+          if (attribute.nodeName.toLowerCase() != 'videoid') {
+            playerVars[attribute.nodeName] = attribute.value;
+          }
         }
-      });
-    }
+
+        this.player = new YT.Player(this.$.player, {
+          videoId: this.videoId,
+          width: this.width,
+          height: this.height,
+          playerVars: playerVars,
+          events: eventProxyFunctions
+        });
+      }
+    });
   </script>
 </polymer-element>
