@@ -7,9 +7,9 @@
       videoId="mN7IAaRdi_k"
       height="270px"
       width="480px"
-      rel=0
-      start=5
-      autoplay=1>
+      rel="0"
+      start="5"
+      autoplay="1">
     </google-youtube>
 
 `google-youtube` supports the full list of embedded player parameters documented at
@@ -24,7 +24,7 @@ and loading a new video.
 @element google-youtube
 @blurb Element providing YouTube video playback.
 @status alpha
-@url jeffposnick.github.io/google-youtube
+@url googlewebcomponents.github.io/google-youtube
 -->
 <polymer-element name="google-youtube" attributes="videoId">
   <template>
@@ -41,7 +41,7 @@ and loading a new video.
     Polymer('google-youtube', {
       /**
        * Fired when the YT.Player object is ready to be used.
-       * The object is exposed via <code>this.player</code>.
+       * The object is exposed via `this.player`.
        *
        * @event onReady
        */
@@ -49,7 +49,7 @@ and loading a new video.
       /**
        * Fired when the state of the player changes. See
        * <a href="https://developers.google.com/youtube/iframe_api_reference#onStateChange">the documentation</a>
-       * for a list of possible state values, exposed in <code>e.detail.data</code>.
+       * for a list of possible state values, exposed in `e.detail.data`.
        *
        * @event onStateChange
        * @param {Object} e Event parameters.
@@ -58,7 +58,7 @@ and loading a new video.
       /**
        * Fired when playback fails due to an error. See
        * <a href="https://developers.google.com/youtube/iframe_api_reference#onError">the documentation</a>
-       * for a list of error values, exposed in <code>e.detail.data</code>.
+       * for a list of error values, exposed in `e.detail.data`.
        *
        * @event onError
        * @param {Object} e Event parameters.
@@ -72,22 +72,29 @@ and loading a new video.
        *
        * @attribute type
        * @type string
+       * @default 'mN7IAaRdi_k'
        */
       videoId: 'mN7IAaRdi_k',
 
       /**
        * Sets the height of the player on the page.
+       * Accepts anything valid for a CSS measurement, e.g. '200px' or '50%'.
+       * If unit of measurement is left off, 'px' is assumed.
        *
        * @attribute type
        * @type string
+       * @default '270px'
        */
       height: '270px',
 
       /**
        * Sets the width of the player on the page.
+       * Accepts anything valid for a CSS measurement, e.g. '200px' or '50%'.
+       * If unit of measurement is left off, 'px' is assumed.
        *
        * @attribute type
        * @type string
+       * @default '480px'
        */
       width: '480px',
 
