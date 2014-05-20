@@ -12,14 +12,9 @@
       autoplay="1">
     </google-youtube>
 
-`google-youtube` supports the full list of embedded player parameters documented at
-https://developers.google.com/youtube/player_parameters
-Each can be set as an attribute on `google-youtube`.
+`google-youtube` supports all of the [embedded player parameters](https://developers.google.com/youtube/player_parameters). Each can be set as an attribute on `google-youtube`.
 
-The standard set of events, documented at
-https://developers.google.com/youtube/iframe_api_reference#Events
-are exposed, as well as methods for playing, pausing, seeking to a specific time,
-and loading a new video.
+The standard set of [YouTube player events](https://developers.google.com/youtube/iframe_api_reference#Events) are exposed, as well as methods for playing, pausing, seeking to a specific time, and loading a new video.
 
 @element google-youtube
 @blurb Element providing YouTube video playback.
@@ -40,25 +35,24 @@ and loading a new video.
   <script>
     Polymer('google-youtube', {
       /**
-       * Fired when the YT.Player object is ready to be used.
-       * The object is exposed via `this.player`.
+       * Fired when the YouTube player is fully initialized and ready for use.
        *
        * @event onReady
        */
 
       /**
-       * Fired when the state of the player changes. See
-       * <a href="https://developers.google.com/youtube/iframe_api_reference#onStateChange">the documentation</a>
-       * for a list of possible state values, exposed in `e.detail.data`.
+       * Fired when the state of the player changes. `e.detail.data` is set to one of
+       * [the documented](https://developers.google.com/youtube/iframe_api_reference#onStateChange)
+       * states.
        *
        * @event onStateChange
        * @param {Object} e Event parameters.
        */
 
       /**
-       * Fired when playback fails due to an error. See
-       * <a href="https://developers.google.com/youtube/iframe_api_reference#onError">the documentation</a>
-       * for a list of error values, exposed in `e.detail.data`.
+       * Fired when playback fails due to an error. `e.detail.data` is set to one of
+       * [the documented](https://developers.google.com/youtube/iframe_api_reference#onError)
+       * error codes.
        *
        * @event onError
        * @param {Object} e Event parameters.
@@ -68,9 +62,10 @@ and loading a new video.
        * Sets the id of the video to play. Changing this attribute will trigger a call
        * to load a new video into the player.
        *
-       * See <a href="https://developers.google.com/youtube/iframe_api_reference#Loading_a_Video_Player">the documentation</a> for more details.
+       * You can [search for videos programmatically](https://developers.google.com/youtube/v3/docs/search/list)
+       * using the YouTube Data API, or just hardcode known video ids to display on your page.
        *
-       * @attribute type
+       * @attribute videoId
        * @type string
        * @default 'mN7IAaRdi_k'
        */
@@ -79,9 +74,11 @@ and loading a new video.
       /**
        * Sets the height of the player on the page.
        * Accepts anything valid for a CSS measurement, e.g. '200px' or '50%'.
-       * If unit of measurement is left off, 'px' is assumed.
+       * If the unit of measurement is left off, 'px' is assumed.
        *
-       * @attribute type
+       * Defaults to '270px'.
+       *
+       * @attribute height
        * @type string
        * @default '270px'
        */
@@ -90,9 +87,11 @@ and loading a new video.
       /**
        * Sets the width of the player on the page.
        * Accepts anything valid for a CSS measurement, e.g. '200px' or '50%'.
-       * If unit of measurement is left off, 'px' is assumed.
+       * If the unit of measurement is left off, 'px' is assumed.
        *
-       * @attribute type
+       * Defaults to '480px'.
+       *
+       * @attribute width
        * @type string
        * @default '480px'
        */
@@ -100,30 +99,42 @@ and loading a new video.
 
       /**
        * Plays the current video.
+       *
+       * @method play
        */
       play: function() {
-        this.player.playVideo();
+        if (this.player) {
+          this.player.playVideo();
+        }
       },
 
       /**
        * Pauses the current video.
+       *
+       * @method pause
        */
       pause: function() {
-        this.player.pauseVideo();
+        if (this.player) {
+          this.player.pauseVideo();
+        }
       },
 
       /**
        * Skips ahead (or back) to the specified number of seconds.
-       * See <a href="https://developers.google.com/youtube/iframe_api_reference#seekTo">the documentation</a> for more details.
        *
+       * @method seekTo
        * @param {number} seconds Number of seconds to seek to.
        */
       seekTo: function(seconds) {
-        this.player.seekTo(seconds, true);
+        if (this.player) {
+          this.player.seekTo(seconds, true);
+        }
       },
 
       videoIdChanged: function() {
-        this.player.loadVideoById(this.videoId);
+        if (this.player) {
+          this.player.loadVideoById(this.videoId);
+        }
       },
 
       player: null,
@@ -147,6 +158,8 @@ and loading a new video.
         };
         for (var i = 0; i < this.attributes.length; i++) {
           var attribute = this.attributes[i];
+          // We don't want to set videoId in the playerVars object, so perform a
+          // case-insensitive comparison to skip it.
           if (attribute.nodeName.toLowerCase() != 'videoid') {
             playerVars[attribute.nodeName] = attribute.value;
           }
