@@ -1,7 +1,9 @@
 {
   "name": "google-youtube",
+  "version": "0.0.1",
   "private": true,
   "dependencies": {
+  	"polymer": "Polymer/polymer#master",
     "google-apis": "PolymerLabs/google-apis#master"
   }
 }
