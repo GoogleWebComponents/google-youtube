@@ -136,7 +136,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 
       videoIdChanged: function() {
         if (this.player) {
-          this.player.loadVideoById(this.videoId);
+          this.player.cueVideoById(this.videoId);
         }
       },
 
