@@ -27,7 +27,7 @@
     <div>
       <label for="video-id">Video ID:</label>
       <input id="video-id" type="text" value="M7lc1UVf-VE">
-      <input id="load-video" type="button" value="Load">
+      <input id="cue-video" type="button" value="Cue">
     </div>
 
     <div>
@@ -47,7 +47,7 @@
         googleYouTubeElement.pause();
       });
 
-      document.getElementById('load-video').addEventListener('click', function() {
+      document.getElementById('cue-video').addEventListener('click', function() {
         googleYouTubeElement.videoid = document.getElementById('video-id').value;
       });
 
