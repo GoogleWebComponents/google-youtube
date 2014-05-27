@@ -5,7 +5,7 @@
 `google-youtube` encapsulates the YouTube player into a web component.
 
     <google-youtube
-      videoId="..."
+      videoid="..."
       height="270px"
       width="480px"
       rel="0"
@@ -22,7 +22,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 @status alpha
 @url googlewebcomponents.github.io/google-youtube
 -->
-<polymer-element name="google-youtube" attributes="videoId">
+<polymer-element name="google-youtube" attributes="videoid">
   <template>
     <link href="google-youtube.css" rel="stylesheet" />
 
@@ -66,11 +66,11 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        *
        * Defaults to 'mN7IAaRdi_k'.
        *
-       * @attribute videoId
+       * @attribute videoid
        * @type string
        * @default 'mN7IAaRdi_k'
        */
-      videoId: 'mN7IAaRdi_k',
+      videoid: 'mN7IAaRdi_k',
 
       /**
        * Sets the height of the player on the page.
@@ -135,9 +135,9 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
         }
       },
 
-      videoIdChanged: function() {
+      videoidChanged: function() {
         if (this.player) {
-          this.player.cueVideoById(this.videoId);
+          this.player.cueVideoById(this.videoid);
         }
       },
 
@@ -162,15 +162,14 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
         };
         for (var i = 0; i < this.attributes.length; i++) {
           var attribute = this.attributes[i];
-          // We don't want to set videoId in the playerVars object, so perform a
-          // case-insensitive comparison to skip it.
-          if (attribute.nodeName.toLowerCase() != 'videoid') {
+          // We don't want to set videoid in the playerVars object, so skip it.
+          if (attribute.nodeName != 'videoid') {
             playerVars[attribute.nodeName] = attribute.value;
           }
         }
 
         this.player = new YT.Player(this.$.player, {
-          videoId: this.videoId,
+          videoId: this.videoid,
           width: this.width,
           height: this.height,
           playerVars: playerVars,

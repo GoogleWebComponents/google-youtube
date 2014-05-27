@@ -17,7 +17,7 @@
 
   <body unresolved>
     <p>A <code>google-youtube</code> looks like this:</p>
-    <google-youtube videoId="mN7IAaRdi_k"></google-youtube>
+    <google-youtube videoid="mN7IAaRdi_k"></google-youtube>
 
     <div>
       <input id="play-video" type="button" value="Play">
@@ -48,7 +48,7 @@
       });
 
       document.getElementById('load-video').addEventListener('click', function() {
-        googleYouTubeElement.videoId = document.getElementById('video-id').value;
+        googleYouTubeElement.videoid = document.getElementById('video-id').value;
       });
 
       googleYouTubeElement.addEventListener('onStateChange', function(e) {
