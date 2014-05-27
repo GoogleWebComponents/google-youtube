@@ -59,7 +59,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 
       /**
        * Sets the id of the video to play. Changing this attribute will trigger a call
-       * to load a new video into the player.
+       * to cue a new video into the player.
        *
        * You can [search for videos programmatically](https://developers.google.com/youtube/v3/docs/search/list)
        * using the YouTube Data API, or just hardcode known video ids to display on your page.
@@ -100,6 +100,9 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 
       /**
        * Plays the current video.
+       *
+       * Note that on certain mobile browsers, playback
+       * [can't be initiated programmatically](https://developers.google.com/youtube/iframe_api_reference#Mobile_considerations).
        *
        * @method play
        */
