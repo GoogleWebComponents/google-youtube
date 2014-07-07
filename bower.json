@@ -10,7 +10,7 @@
   "license": "Apache2",
   "homepage": "https://github.com/googlewebcomponents/google-youtube",
   "dependencies": {
-    "polymer": "Polymer/polymer#~0.2.4",
-    "google-apis": "PolymerLabs/google-apis#~0.2.4"
+    "polymer": "Polymer/polymer#~0.3.3",
+    "google-apis": "PolymerLabs/google-apis#master"
   }
 }
