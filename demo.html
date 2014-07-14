@@ -60,7 +60,7 @@
           googleYouTube.videoid = document.getElementById('video-id').value;
         });
 
-        googleYouTube.addEventListener('google-youtube-state-change', function (e) {
+        googleYouTube.addEventListener('google-youtube-state-change', function(e) {
           pageTemplate.events.push(e.detail.data);
         });
       });
