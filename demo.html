@@ -16,45 +16,53 @@
   </head>
 
   <body unresolved>
-    <p>A <code>google-youtube</code> looks like this:</p>
-    <google-youtube videoid="mN7IAaRdi_k"></google-youtube>
+    <template id="page-template" is="auto-binding">
+      <h1><code>&lt;google-youtube&gt;</code> Demo</h1>
 
-    <div>
-      <input id="play-video" type="button" value="Play">
-      <input id="pause-video" type="button" value="Pause">
-    </div>
+      <google-youtube videoid="mN7IAaRdi_k" state="{{state}}"></google-youtube>
 
-    <div>
-      <label for="video-id">Video ID:</label>
-      <input id="video-id" type="text" value="M7lc1UVf-VE">
-      <input id="cue-video" type="button" value="Cue">
-    </div>
+      <div>
+        <input id="play-video" type="button" value="Play" disabled?="{{ state == 1 || state == 3 }}">
+        <input id="pause-video" type="button" value="Pause" disabled?="{{ state != 1 && state != 3 }}">
+      </div>
 
-    <div>
-      <p>Player Events:</p>
-      <ul id="event-list"></ul>
-    </div>
+      <div>
+        <label for="video-id">Video ID:</label>
+        <input id="video-id" type="text" value="M7lc1UVf-VE">
+        <input id="cue-video" type="button" value="Cue">
+      </div>
+
+      <div>
+        <p>Player Events:</p>
+        <ol>
+          <template repeat="{{event in events}}">
+            <li>State change: {{event}}</li>
+          </template>
+        </ol>
+      </div>
+    </template>
 
     <script>
-      var googleYouTubeElement = document.querySelector('google-youtube');
-      var eventListElement = document.getElementById('event-list');
+      window.addEventListener('template-bound', function() {
+        var googleYouTube = document.querySelector('google-youtube');
+        var pageTemplate = document.getElementById('page-template');
+        pageTemplate.events = [];
 
-      document.getElementById('play-video').addEventListener('click', function() {
-        googleYouTubeElement.play();
-      });
+        document.getElementById('play-video').addEventListener('click', function() {
+          googleYouTube.play();
+        });
 
-      document.getElementById('pause-video').addEventListener('click', function() {
-        googleYouTubeElement.pause();
-      });
+        document.getElementById('pause-video').addEventListener('click', function() {
+          googleYouTube.pause();
+        });
 
-      document.getElementById('cue-video').addEventListener('click', function() {
-        googleYouTubeElement.videoid = document.getElementById('video-id').value;
-      });
+        document.getElementById('cue-video').addEventListener('click', function() {
+          googleYouTube.videoid = document.getElementById('video-id').value;
+        });
 
-      googleYouTubeElement.addEventListener('onStateChange', function(e) {
-        var liElement = document.createElement('li');
-        liElement.textContent = 'New State: ' + e.detail.data;
-        eventListElement.appendChild(liElement);
+        googleYouTube.addEventListener('google-youtube-state-change', function (e) {
+          pageTemplate.events.push(e.detail.data);
+        });
       });
     </script>
   </body>

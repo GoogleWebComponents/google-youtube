@@ -1,6 +1,6 @@
 {
   "name": "google-youtube",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "authors": [
     "Jeff Posnick <jeffy@google.com>"
   ],
@@ -10,7 +10,8 @@
   "license": "Apache2",
   "homepage": "https://github.com/googlewebcomponents/google-youtube",
   "dependencies": {
-    "polymer": "Polymer/polymer#~0.3.3",
-    "google-apis": "PolymerLabs/google-apis#master"
+    "google-apis": "PolymerLabs/google-apis#master",
+    "polymer": "Polymer/polymer#~0.3.4",
+    "polymer-test-tools": "Polymer/polymer-test-tools#~0.3.3"
   }
 }

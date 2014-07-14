@@ -22,7 +22,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 @status alpha
 @url googlewebcomponents.github.io/google-youtube
 -->
-<polymer-element name="google-youtube" attributes="videoid">
+<polymer-element name="google-youtube" attributes="videoid state">
   <template>
     <link href="google-youtube.css" rel="stylesheet" />
 
@@ -36,7 +36,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       /**
        * Fired when the YouTube player is fully initialized and ready for use.
        *
-       * @event onReady
+       * @event google-youtube-ready
        */
 
       /**
@@ -44,7 +44,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * [the documented](https://developers.google.com/youtube/iframe_api_reference#onStateChange)
        * states.
        *
-       * @event onStateChange
+       * @event google-youtube-state-change
        * @param {Object} e Event parameters.
        */
 
@@ -53,7 +53,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * [the documented](https://developers.google.com/youtube/iframe_api_reference#onError)
        * error codes.
        *
-       * @event onError
+       * @event google-youtube-error
        * @param {Object} e Event parameters.
        */
 
@@ -97,6 +97,25 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * @default '480px'
        */
       width: '480px',
+
+      /**
+       * Exposes the current player state.
+       * Using this attribute is an alternative to listening to `google-youtube-state-change` events,
+       * and can simplify the logic in templates with conditional binding.
+       *
+       * The [possible values](https://developers.google.com/youtube/iframe_api_reference#onStateChange):
+       *   - -1 (unstarted)
+       *   - 0 (ended)
+       *   - 1 (playing)
+       *   - 2 (paused)
+       *   - 3 (buffering)
+       *   - 5 (video cued)
+       *
+       * @attribute state
+       * @type number
+       * @default -1
+       */
+      state: -1,
 
       /**
        * Plays the current video.
@@ -144,14 +163,6 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       player: null,
 
       apiLoad: function() {
-        var that = this;
-        var eventProxyFunctions = {};
-        ['onReady', 'onStateChange', 'onError'].forEach(function(eventName) {
-          eventProxyFunctions[eventName] = function(e) {
-            that.fire(eventName, e);
-          };
-        });
-
         // Establish some defaults. Attributes set on the google-youtube element
         // can override defaults, or specify addtional player parameters. See
         // https://developers.google.com/youtube/player_parameters
@@ -173,7 +184,20 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
           width: this.width,
           height: this.height,
           playerVars: playerVars,
-          events: eventProxyFunctions
+          events: {
+            onReady: function(e) {
+              this.fire('google-youtube-ready', e);
+            }.bind(this),
+            onStateChange: function(e) {
+              this.state = e.data;
+              this.fire('google-youtube-state-change', e);
+            }.bind(this),
+            onError: function(e) {
+              // Set the player state to 0 ('ended'), since playback will have stopped.
+              this.state = 0;
+              this.fire('google-youtube-error', e);
+            }.bind(this)
+          }
         });
       }
     });
