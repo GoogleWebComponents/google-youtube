@@ -22,7 +22,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 @status alpha
 @url googlewebcomponents.github.io/google-youtube
 -->
-<polymer-element name="google-youtube" attributes="videoid state width height">
+<polymer-element name="google-youtube"
+                 attributes="videoid state width height currenttime duration currenttimeformatted durationformatted fractionloaded">
   <template>
     <link href="google-youtube.css" rel="stylesheet" />
 
@@ -118,6 +119,51 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       state: -1,
 
       /**
+       * Exposes the current playback time, in seconds.
+       *
+       * You can divide this value by the `duration` to determine the playback percentage.
+       *
+       * @attribute currenttime
+       * @type number
+       */
+      currenttime: 0,
+
+      /**
+       * Exposes the video duration, in seconds.
+       *
+       * You can divide the `currenttime` to determine the playback percentage.
+       *
+       * @attribute duration
+       * @type number
+       */
+      duration: 1, // To avoid divide-by-zero errors if used before video is cued.
+
+      /**
+       * Exposes the current playback time, formatted as a (HH:)MM:SS string.
+       *
+       *
+       * @attribute currenttimeformatted
+       * @type string
+       */
+      currenttimeformatted: '0:00',
+
+      /**
+       * Exposes the video duration, formatted as a (HH:)MM:SS string.
+       *
+       * @attribute durationformatted
+       * @type string
+       */
+      durationformatted: '0:00', // To avoid divide-by-zero errors if used before video is cued.
+
+      /**
+       * The fraction of the bytes that have been loaded for the current video, in the range [0-1].
+       *
+       * @attribute fractionloaded
+       * @type number
+       */
+      fractionloaded: 0,
+
+      /**
        * Plays the current video.
        *
        * Note that on certain mobile browsers, playback
@@ -187,10 +233,26 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
           events: {
             onReady: function(e) {
               this.fire('google-youtube-ready', e);
+
+              // Duration info for the initially cued video is available at this point.
+              this.duration = this.player.getDuration();
+              this.durationformatted = this.toHHMMSS(this.duration);
             }.bind(this),
             onStateChange: function(e) {
               this.state = e.data;
               this.fire('google-youtube-state-change', e);
+
+              // The YouTube Player API only exposes playback data about a video once playback
+              // has begun.
+              if (this.state == 1) {
+                // Update duration in case a new video has been loaded.
+                this.duration = this.player.getDuration();
+                this.durationformatted = this.toHHMMSS(this.duration);
+
+                if (!this.updatePlaybackStatsInterval) {
+                  this.updatePlaybackStatsInterval = setInterval(this.updatePlaybackStats.bind(this), 1000);
+                }
+              }
             }.bind(this),
             onError: function(e) {
               // Set the player state to 0 ('ended'), since playback will have stopped.
@@ -199,6 +261,34 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
             }.bind(this)
           }
         });
+      },
+
+      updatePlaybackStats: function() {
+        this.currenttime = Math.round(this.player.getCurrentTime());
+        this.currenttimeformatted = this.toHHMMSS(this.currenttime);
+        this.fractionloaded = this.player.getVideoLoadedFraction();
+      },
+
+      toHHMMSS: function(totalSeconds) {
+        var hours = Math.floor(totalSeconds / 3600);
+        totalSeconds -= hours * 3600;
+        var minutes = Math.floor(totalSeconds / 60);
+        var seconds = totalSeconds - minutes * 60;
+
+        var hourPortion = '';
+        if (hours > 0) {
+          hourPortion += hours + ':';
+
+          if (minutes < 10) {
+            minutes = '0' + minutes;
+          }
+        }
+
+        if (seconds < 10) {
+          seconds = '0' + seconds;
+        }
+
+        return hourPortion + minutes + ':' + seconds;
       }
     });
   </script>

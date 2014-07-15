@@ -12,6 +12,10 @@
         font-family: sans-serif;
         background: rgba(204, 204, 204, 0.31);
       }
+
+      div {
+        margin-bottom: 1em;
+      }
     </style>
   </head>
 
@@ -19,7 +23,19 @@
     <template id="page-template" is="auto-binding">
       <h1><code>&lt;google-youtube&gt;</code> Demo</h1>
 
-      <google-youtube videoid="mN7IAaRdi_k" state="{{state}}"></google-youtube>
+      <google-youtube id="googleYouTube"
+                      videoid="mN7IAaRdi_k"
+                      state="{{state}}"
+                      currenttime="{{currentTime}}"
+                      currenttimeformatted="{{currentTimeFormatted}}"
+                      duration="{{duration}}"
+                      durationformatted="{{durationFormatted}}"
+                      fractionloaded="{{fractionLoaded}}">
+      </google-youtube>
+
+      <div>
+        <p>Playback Progress: {{currentTimeFormatted}} / {{durationFormatted}} <progress max="1" value="{{ currentTime / duration }}"></progress></p>
+      </div>
 
       <div>
         <input id="play-video" type="button" value="Play" disabled?="{{ state == 1 || state == 3 }}">
@@ -43,10 +59,11 @@
     </template>
 
     <script>
+      var pageTemplate = document.getElementById('page-template');
+      pageTemplate.events = [];
+
       window.addEventListener('template-bound', function() {
         var googleYouTube = document.querySelector('google-youtube');
-        var pageTemplate = document.getElementById('page-template');
-        pageTemplate.events = [];
 
         document.getElementById('play-video').addEventListener('click', function() {
           googleYouTube.play();
