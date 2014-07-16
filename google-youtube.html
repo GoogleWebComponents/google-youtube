@@ -23,7 +23,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 @url googlewebcomponents.github.io/google-youtube
 -->
 <polymer-element name="google-youtube"
-                 attributes="videoid state width height currenttime duration currenttimeformatted durationformatted fractionloaded">
+                 attributes="videoid state width height currenttime duration currenttimeformatted durationformatted fractionloaded chromeless">
   <template>
     <link href="google-youtube.css" rel="stylesheet" />
 
@@ -164,6 +164,23 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       fractionloaded: 0,
 
       /**
+       * A shorthand to enable a set of player attributes that, used together, simulate a "chromeless" YouTube player.
+       *
+       * Equivalent to setting the following attributes:
+       * - `controls="0"`
+       * - `modestbranding="1"`
+       * - `showinfo="0"`
+       *
+       * The "chromeless" player has YouTube branding in cued state, and the native controls
+       * will be disabled during playback. Creating your own custom play/pause/etc. controls is recommended.
+       *
+       * @attribute chromeless
+       * @type boolean
+       * @default false
+       */
+      chromeless: false,
+
+      /**
        * Plays the current video.
        *
        * Note that on certain mobile browsers, playback
@@ -213,16 +230,20 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
         // can override defaults, or specify addtional player parameters. See
         // https://developers.google.com/youtube/player_parameters
         var playerVars = {
-          autohide: 1,
+          playsinline: 1,
           controls: 2,
-          playsinline: 1
+          autohide: 1
         };
+
+        if (this.chromeless) {
+          playerVars.controls = 0;
+          playerVars.modestbranding = 1;
+          playerVars.showinfo = 0;
+        }
+
         for (var i = 0; i < this.attributes.length; i++) {
           var attribute = this.attributes[i];
-          // We don't want to set videoid in the playerVars object, so skip it.
-          if (attribute.nodeName != 'videoid') {
-            playerVars[attribute.nodeName] = attribute.value;
-          }
+          playerVars[attribute.nodeName] = attribute.value;
         }
 
         this.player = new YT.Player(this.$.player, {
