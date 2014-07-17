@@ -318,7 +318,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
         var hours = Math.floor(totalSeconds / 3600);
         totalSeconds -= hours * 3600;
         var minutes = Math.floor(totalSeconds / 60);
-        var seconds = totalSeconds - minutes * 60;
+        var seconds = Math.round(totalSeconds - (minutes * 60));
 
         var hourPortion = '';
         if (hours > 0) {
