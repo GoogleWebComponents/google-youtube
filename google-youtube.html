@@ -170,8 +170,10 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * - `controls="0"`
        * - `modestbranding="1"`
        * - `showinfo="0"`
+       * - `iv_load_policy="3"`
+       * - `rel="0"`
        *
-       * The "chromeless" player has YouTube branding in cued state, and the native controls
+       * The "chromeless" player has minimal YouTube branding in cued state, and the native controls
        * will be disabled during playback. Creating your own custom play/pause/etc. controls is recommended.
        *
        * @attribute chromeless
@@ -249,6 +251,10 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
           playerVars.controls = 0;
           playerVars.modestbranding = 1;
           playerVars.showinfo = 0;
+          // Disable annotations.
+          playerVars.iv_load_policy = 3;
+          // Disable related videos on the end screen.
+          playerVars.rel = 0;
         }
 
         for (var i = 0; i < this.attributes.length; i++) {
