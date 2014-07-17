@@ -189,7 +189,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * @method play
        */
       play: function() {
-        if (this.player) {
+        if (this.player && this.player.playVideo) {
           this.player.playVideo();
         }
       },
@@ -200,7 +200,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * @method pause
        */
       pause: function() {
-        if (this.player) {
+        if (this.player && this.player.pauseVideo) {
           this.player.pauseVideo();
         }
       },
@@ -212,18 +212,28 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * @param {number} seconds Number of seconds to seek to.
        */
       seekTo: function(seconds) {
-        if (this.player) {
+        if (this.player && this.player.seekTo) {
           this.player.seekTo(seconds, true);
         }
       },
 
       videoidChanged: function() {
-        if (this.player) {
+        this.currenttime = 0;
+        this.currenttimeformatted = this.toHHMMSS(0);
+        this.fractionloaded = 0;
+        this.duration = 0;
+        this.durationformatted = this.toHHMMSS(0);
+
+        if (this.player && this.player.cueVideoById) {
           this.player.cueVideoById(this.videoid);
+        } else {
+          this.pendingVideoId = this.videoid;
         }
       },
 
       player: null,
+      updatePlaybackStatsInterval: null,
+      pendingVideoId: '',
 
       apiLoad: function() {
         // Establish some defaults. Attributes set on the google-youtube element
@@ -253,31 +263,39 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
           playerVars: playerVars,
           events: {
             onReady: function(e) {
-              this.fire('google-youtube-ready', e);
+              if (this.pendingVideoId) {
+                this.player.cueVideoById(this.pendingVideoId);
+                this.pendingVideoId = '';
+              }
 
-              // Duration info for the initially cued video is available at this point.
-              this.duration = this.player.getDuration();
-              this.durationformatted = this.toHHMMSS(this.duration);
+              this.fire('google-youtube-ready', e);
             }.bind(this),
             onStateChange: function(e) {
               this.state = e.data;
-              this.fire('google-youtube-state-change', e);
 
-              // The YouTube Player API only exposes playback data about a video once playback
-              // has begun.
+              // The YouTube Player API only exposes playback data about a video once
+              // playback has begun.
               if (this.state == 1) {
-                // Update duration in case a new video has been loaded.
                 this.duration = this.player.getDuration();
                 this.durationformatted = this.toHHMMSS(this.duration);
 
                 if (!this.updatePlaybackStatsInterval) {
                   this.updatePlaybackStatsInterval = setInterval(this.updatePlaybackStats.bind(this), 1000);
                 }
+              } else {
+                // We only need to update the stats if the video is playing.
+                if (this.updatePlaybackStatsInterval) {
+                  clearInterval(this.updatePlaybackStatsInterval);
+                  this.updatePlaybackStatsInterval = null;
+                }
               }
+
+              this.fire('google-youtube-state-change', e);
             }.bind(this),
             onError: function(e) {
               // Set the player state to 0 ('ended'), since playback will have stopped.
               this.state = 0;
+
               this.fire('google-youtube-error', e);
             }.bind(this)
           }
