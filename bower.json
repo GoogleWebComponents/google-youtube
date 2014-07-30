@@ -5,12 +5,18 @@
     "Jeff Posnick <jeffy@google.com>"
   ],
   "description": "YouTube video playback web component.",
-  "keywords": "youtube, polymer, web-components",
+  "keywords": [
+    "google",
+    "youtube",
+    "polymer",
+    "web-components",
+    "web-component"
+  ],
   "main": "google-youtube.html",
   "license": "Apache2",
   "homepage": "https://github.com/googlewebcomponents/google-youtube",
   "dependencies": {
     "polymer": "Polymer/polymer#~0.3.3",
-    "google-apis": "PolymerLabs/google-apis#master"
+    "google-apis": "GoogleWebComponents/google-apis#master"
   }
 }
