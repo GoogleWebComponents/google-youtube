@@ -12,49 +12,74 @@
         font-family: sans-serif;
         background: rgba(204, 204, 204, 0.31);
       }
+
+      div {
+        margin-bottom: 1em;
+      }
     </style>
   </head>
 
   <body unresolved>
-    <p>A <code>google-youtube</code> looks like this:</p>
-    <google-youtube videoid="mN7IAaRdi_k"></google-youtube>
+    <template id="page-template" is="auto-binding">
+      <h1><code>&lt;google-youtube&gt;</code> Demo</h1>
 
-    <div>
-      <input id="play-video" type="button" value="Play">
-      <input id="pause-video" type="button" value="Pause">
-    </div>
+      <google-youtube id="googleYouTube"
+                      videoid="mN7IAaRdi_k"
+                      state="{{state}}"
+                      currenttime="{{currentTime}}"
+                      currenttimeformatted="{{currentTimeFormatted}}"
+                      duration="{{duration}}"
+                      durationformatted="{{durationFormatted}}"
+                      fractionloaded="{{fractionLoaded}}">
+      </google-youtube>
 
-    <div>
-      <label for="video-id">Video ID:</label>
-      <input id="video-id" type="text" value="M7lc1UVf-VE">
-      <input id="cue-video" type="button" value="Cue">
-    </div>
+      <div>
+        <p>Playback Progress: {{currentTimeFormatted}} / {{durationFormatted}} <progress max="1" value="{{ currentTime / duration }}"></progress></p>
+      </div>
 
-    <div>
-      <p>Player Events:</p>
-      <ul id="event-list"></ul>
-    </div>
+      <div>
+        <input id="play-video" type="button" value="Play" disabled?="{{ state == 1 || state == 3 }}">
+        <input id="pause-video" type="button" value="Pause" disabled?="{{ state != 1 && state != 3 }}">
+      </div>
+
+      <div>
+        <label for="video-id">Video ID:</label>
+        <input id="video-id" type="text" value="M7lc1UVf-VE">
+        <input id="cue-video" type="button" value="Cue">
+      </div>
+
+      <div>
+        <p>Player Events:</p>
+        <ol>
+          <template repeat="{{event in events}}">
+            <li>State change: {{event}}</li>
+          </template>
+        </ol>
+      </div>
+    </template>
 
     <script>
-      var googleYouTubeElement = document.querySelector('google-youtube');
-      var eventListElement = document.getElementById('event-list');
+      var pageTemplate = document.getElementById('page-template');
+      pageTemplate.events = [];
 
-      document.getElementById('play-video').addEventListener('click', function() {
-        googleYouTubeElement.play();
-      });
+      window.addEventListener('template-bound', function() {
+        var googleYouTube = document.querySelector('google-youtube');
 
-      document.getElementById('pause-video').addEventListener('click', function() {
-        googleYouTubeElement.pause();
-      });
+        document.getElementById('play-video').addEventListener('click', function() {
+          googleYouTube.play();
+        });
 
-      document.getElementById('cue-video').addEventListener('click', function() {
-        googleYouTubeElement.videoid = document.getElementById('video-id').value;
-      });
+        document.getElementById('pause-video').addEventListener('click', function() {
+          googleYouTube.pause();
+        });
 
-      googleYouTubeElement.addEventListener('onStateChange', function(e) {
-        var liElement = document.createElement('li');
-        liElement.textContent = 'New State: ' + e.detail.data;
-        eventListElement.appendChild(liElement);
+        document.getElementById('cue-video').addEventListener('click', function() {
+          googleYouTube.videoid = document.getElementById('video-id').value;
+        });
+
+        googleYouTube.addEventListener('google-youtube-state-change', function(e) {
+          pageTemplate.events.push(e.detail.data);
+        });
       });
     </script>
   </body>
