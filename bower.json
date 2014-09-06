@@ -21,7 +21,7 @@
     "../"
   ],
   "main": "google-youtube.html",
-  "license": "Apache2",
+  "license": "Apache-2.0",
   "homepage": "https://googlewebcomponents.github.io/google-youtube",
   "dependencies": {
     "google-apis": "GoogleWebComponents/google-apis#~0.3.2",
