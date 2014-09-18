@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <title>google-youtube Demo</title>
+    <title>&lt;google-youtube&gt; Demo</title>
     <script src="../platform/platform.js"></script>
     <link rel="import" href="google-youtube.html">
 
@@ -23,6 +23,7 @@
     <template id="page-template" is="auto-binding">
       <h1><code>&lt;google-youtube&gt;</code> Demo</h1>
 
+      <h3>Full API Demo</h3>
       <google-youtube id="googleYouTube"
                       videoid="mN7IAaRdi_k"
                       state="{{state}}"
@@ -56,6 +57,13 @@
           </template>
         </ol>
       </div>
+
+      <h3>Custom Thumbnail Demo</h3>
+      <google-youtube videoid="yRbOSdAe_JU"
+                      width="853px"
+                      height="480px"
+                      thumbnail="//www.polymer-project.org/images/logos/p-logo.svg">
+      </google-youtube>
     </template>
 
     <script>
@@ -79,6 +87,10 @@
 
         googleYouTube.addEventListener('google-youtube-state-change', function(e) {
           pageTemplate.events.push(e.detail.data);
+        });
+
+        googleYouTube.addEventListener('google-youtube-error', function(e) {
+          console.error('YouTube playback error', e.detail);
         });
       });
     </script>
