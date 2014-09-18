@@ -23,11 +23,27 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 @homepage https://googlewebcomponents.github.io/google-youtube
 -->
 <polymer-element name="google-youtube"
-                 attributes="videoid state width height currenttime duration currenttimeformatted durationformatted fractionloaded chromeless thumbnail">
+                 attributes="videoid state width height currenttime duration currenttimeformatted durationformatted fractionloaded chromeless thumbnail fluid">
   <template>
     <style>
       :host {
         display: block;
+      }
+
+      :host([fluid]) {
+        width: 100%;
+        max-width: 100%;
+        position: relative;
+      }
+
+      :host([fluid]) iframe,
+      :host([fluid]) #thumbnail {
+        vertical-align: bottom;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
       }
 
       #container {
@@ -222,6 +238,28 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * @default ''
        */
       thumbnail: '',
+
+      /**
+       * Sets fluid width/height
+       *
+       * If the fluid attribute is set, the aspect ratio of the video will
+       * be inferred (if set in pixels), or assumed to be 16:9. The element
+       * will give itself enough top padding to force the player to use the
+       * correct aspect ratio, even as the screen size changes.
+       *
+       */
+      ready: function() {
+        if (this.hasAttribute('fluid')) {
+          var ratio = parseInt(this.height, 10) / parseInt(this.width, 10);
+          if (isNaN(ratio)) {
+            ratio = 9/16;
+          }
+          ratio *= 100;
+          this.width = '100%';
+          this.height = 'auto';
+          this.style['padding-top'] = ratio + '%';
+        }
+      },
 
       /**
        * Plays the current video.
