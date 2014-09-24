@@ -290,6 +290,38 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       },
 
       /**
+       * Modifies the volume of the current video.
+       *
+       * @method setVolume
+       */      
+      setVolume: function(v) {
+        if (this.player && this.player.setVolume) {
+          this.player.setVolume(v);
+        }
+      },
+      
+      /**
+       * Mutes the current video.
+       *
+       * @method mute
+       */        
+      mute: function() {
+        if (this.player && this.player.mute) {
+          this.player.mute();
+        }
+      },
+
+      /**
+       * Unmutes the current video.
+       *
+       * @method unMute
+       */        
+      unMute: function() {
+        if (this.player && this.player.unMute) {
+          this.player.unMute();
+        }
+      },
+      /**
        * Pauses the current video.
        *
        * @method pause
