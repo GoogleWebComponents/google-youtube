@@ -292,6 +292,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       /**
        * Modifies the volume of the current video.
        *
+       * Developers should take care not to break expected user experience by programatically modifying the volume on mobile browsers
+       * (note that the YouTube player, in addition, does not display volume controls in a mobile environment)
        * @method setVolume
        */      
       setVolume: function(v) {
@@ -303,6 +305,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       /**
        * Mutes the current video.
        *
+       * Developers should take care not to break expected user experience by programatically modifying the volume on mobile browsers
+       * (note that the YouTube player, in addition, does not display volume controls in a mobile environment)
        * @method mute
        */        
       mute: function() {
@@ -314,6 +318,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       /**
        * Unmutes the current video.
        *
+       * Developers should take care not to break expected user experience by programatically modifying the volume on mobile browsers
+       * (note that the YouTube player, in addition, does not display volume controls in a mobile environment)
        * @method unMute
        */        
       unMute: function() {
@@ -321,6 +327,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
           this.player.unMute();
         }
       },
+      
       /**
        * Pauses the current video.
        *
