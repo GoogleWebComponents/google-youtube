@@ -123,7 +123,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       videoid: 'mN7IAaRdi_k',
 
       /**
-       * Whether autoplays are supported in the current browser.
+       * Whether programmatic `<video>.play()` for initial playback is supported in the current browser.
        *
        * Most mobile browsers [do not support](https://developer.apple.com/library/safari/documentation/AudioVideo/Conceptual/Using_HTML5_Audio_Video/Device-SpecificConsiderations/Device-SpecificConsiderations.html#//apple_ref/doc/uid/TP40009523-CH5-SW1) autoplaying or scripted playback of videos.
        * If you attempt to automatically initiate playback of a `<google-youtube>`, e.g. by calling the `play()` method before
@@ -132,11 +132,13 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * (You can hide/disable your custom play button, etc.)
        *
        * The `playsupported` value is determined at runtime, by dynamically creating a <video> element with an
-       * inlined data source and autoplay set to true, and checking whether playback starts. (Inspired by [this sample code](http://stackoverflow.com/a/22795659/385997).)
+       * inlined data source and calling `play()` on it. (Inspired by [Modernizr](https://github.com/Modernizr/Modernizr/blob/master/feature-detects/video/autoplay.js).)
        *
        * If you would rather not incur the minimal overhead involved in going through this process, you can explicitly set
        * `playsupported` to `true` or `false` when initializing `<google-youtube>`. This is only recommended if you know that
        * your web app will never (or only) be used on mobile browsers.
+       * @attribute playsupported
+       * @type boolean
        */
       playsupported: null,
 
@@ -280,7 +282,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       fluid: false,
 
       /**
-       * Sets fluid width/height and detects whether autoplaying is supported in the current browser.
+       * Sets fluid width/height and detects whether programmatic playback is supported in the current browser.
        *
        * If the fluid attribute is set, the aspect ratio of the video will
        * be inferred (if set in pixels), or assumed to be 16:9. The element
@@ -350,6 +352,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        *
        * Note that on certain mobile browsers, playback
        * [can't be initiated programmatically](https://developers.google.com/youtube/iframe_api_reference#Mobile_considerations).
+       *
+       * If `this.playsupported` is not `true`, calling `play()` will have no effect.
        *
        * @method play
        */
