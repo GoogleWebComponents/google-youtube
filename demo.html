@@ -2,6 +2,7 @@
 <!-- Copyright (c) 2014 Google Inc. All rights reserved. -->
 <html>
   <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <title>&lt;google-youtube&gt; Demo</title>
     <script src="../platform/platform.js"></script>
@@ -25,6 +26,7 @@
 
       <h3>Full API Demo</h3>
       <google-youtube id="googleYouTube"
+                      playsupported="{{playSupported}}"
                       videoid="mN7IAaRdi_k"
                       state="{{state}}"
                       currenttime="{{currentTime}}"
@@ -39,7 +41,7 @@
       </div>
 
       <div>
-        <input id="play-video" type="button" value="Play" disabled?="{{ state == 1 || state == 3 }}">
+        <input id="play-video" type="button" value="Play" disabled?="{{ state == 1 || state == 3 || !playSupported}}">
         <input id="pause-video" type="button" value="Pause" disabled?="{{ state != 1 && state != 3 }}">
       </div>
 
