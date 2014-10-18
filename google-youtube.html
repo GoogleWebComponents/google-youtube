@@ -139,7 +139,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * To protect against this, check the value of `playsupported` and don't call `play()` if it is set to `false`.
        * (You can hide/disable your custom play button, etc.)
        *
-       * The `playsupported` value is determined at runtime, by dynamically creating a <video> element with an
+       * The `playsupported` value is determined at runtime, by dynamically creating a `<video>` element with an
        * inlined data source and calling `play()` on it. (Inspired by [Modernizr](https://github.com/Modernizr/Modernizr/blob/master/feature-detects/video/autoplay.js).)
        *
        * If you would rather not incur the minimal overhead involved in going through this process, you can explicitly set
