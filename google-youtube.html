@@ -462,6 +462,14 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       seekTo: function(seconds) {
         if (this.player && this.player.seekTo) {
           this.player.seekTo(seconds, true);
+
+          // Explicitly call updatePlaybackStats() to ensure that the new playback info is
+          // reflected in the bound attributes.
+          // The 100ms delay is somewhat arbitrary, but the YouTube player does need time to
+          // update its internal state following the call to player.seekTo().
+          this.async(function() {
+            this.updatePlaybackStats();
+          }, null, 100);
         }
       },
 
