@@ -462,6 +462,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       seekTo: function(seconds) {
         if (this.player && this.player.seekTo) {
           this.player.seekTo(seconds, true);
+          this.currenttime = Math.round(seconds);
         }
       },
 
