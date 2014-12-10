@@ -119,7 +119,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       /**
        * Sets the id of the video to play. Changing this attribute will trigger a call
        * to load a new video into the player (if `this.autoplay` is set to `1` and `playsupported` is true)
-       * or cue a new video otherwise. 
+       * or cue a new video otherwise.
        *
        * You can [search for videos programmatically](https://developers.google.com/youtube/v3/docs/search/list)
        * using the YouTube Data API, or just hardcode known video ids to display on your page.
@@ -280,7 +280,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * the parent container, while adding `padding-top` to preserve the
        * aspect ratio provided by `width` and `height`. If `width` and `height`
        * have not been set, the player will fall back to a 16:9 aspect ratio.
-       * This is useful for responsive designs where you don't want to 
+       * This is useful for responsive designs where you don't want to
        * introduce letterboxing on your video.
        *
        * @attribute fluid
@@ -403,7 +403,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        *
        * @method setVolume
        * @param {number} volume The new volume, an integer between 0 (muted) and 100 (loudest).
-       */      
+       */
       setVolume: function(volume) {
         if (this.player && this.player.setVolume) {
           this.player.setVolume(volume);
@@ -419,7 +419,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * mobile environment.
        *
        * @method mute
-       */        
+       */
       mute: function() {
         if (this.player && this.player.mute) {
           this.player.mute();
@@ -435,7 +435,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * mobile environment.
        *
        * @method unMute
-       */        
+       */
       unMute: function() {
         if (this.player && this.player.unMute) {
           this.player.unMute();
