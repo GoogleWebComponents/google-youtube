@@ -24,7 +24,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 @homepage https://googlewebcomponents.github.io/google-youtube
 -->
 <polymer-element name="google-youtube"
-                 attributes="videoid playsupported state width height currenttime duration currenttimeformatted durationformatted fractionloaded chromeless thumbnail fluid">
+                 attributes="videoid playsupported state width height currenttime duration currenttimeformatted durationformatted fractionloaded chromeless thumbnail fluid playbackstarted">
   <template>
     <style>
       :host {
@@ -149,6 +149,22 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * @type boolean
        */
       playsupported: null,
+
+      /**
+       * Whether playback has started.
+       *
+       * This defaults to `false` and is set to `true` once the first 'playing' event is fired by
+       * the underlying YouTube Player API.
+       *
+       * Once set to `true`, it will remain that way indefinitely.
+       * Paused/buffering/ended events won't cause `playbackstarted` to reset to `false`.
+       * Nor will loading a new video into the player.
+       *
+       * @attribute playbackstarted
+       * @type boolean
+       * @default false
+       */
+      playbackstarted: false,
 
       /**
        * Sets the height of the player on the page.
@@ -484,7 +500,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
           this.pendingVideoId = this.videoid;
         } else {
           // Figure out whether we should cue or load (which will autoplay) the next video.
-          if (this.playsupported && this.autoplay === 1) {
+          if (this.playsupported && this.attributes['autoplay'].value == '1') {
             this.player.loadVideoById(this.videoid);
           } else {
             this.player.cueVideoById(this.videoid);
@@ -544,6 +560,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
               // The YouTube Player API only exposes playback data about a video once
               // playback has begun.
               if (this.state == 1) {
+                this.playbackstarted = true;
+
                 // After playback has begun, play() can always be used to resume playback if the video is paused.
                 this.playsupported = true;
 
