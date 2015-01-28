@@ -156,10 +156,10 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * This defaults to `false` and is set to `true` once the first 'playing' event is fired by
        * the underlying YouTube Player API.
        *
-       * Once set to `true`, it will remain that way until the 'ended' event is fired, or until
-       * a new video is cued/loaded, at which point it will reset to `false`.
+       * Once set to `true`, it will remain that way until a new video is cued/loaded,
+       * at which point it will reset to `false`.
        *
-       * Paused/buffering events won't cause `playbackstarted` to reset to `false`.
+       * Paused/buffering/ended events won't cause `playbackstarted` to reset to `false`.
        *
        * @attribute playbackstarted
        * @type boolean
@@ -501,7 +501,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
           this.pendingVideoId = this.videoid;
         } else {
           // Figure out whether we should cue or load (which will autoplay) the next video.
-          if (this.playsupported && this.autoplay === 1) {
+          if (this.playsupported && this.attributes['autoplay'].value == '1') {
             this.player.loadVideoById(this.videoid);
           } else {
             this.player.cueVideoById(this.videoid);
@@ -579,8 +579,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
                   this.updatePlaybackStatsInterval = null;
                 }
 
-                // -1: unstarted, 0: ended, 5: video cued
-                if (this.state <= 0 || this.state == 5) {
+                // state -1 is 'unstarted', and indicates that a new video has been cued.
+                if (this.state == -1) {
                   this.playbackstarted = false;
                 }
               }
