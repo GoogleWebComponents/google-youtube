@@ -24,7 +24,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 @homepage https://googlewebcomponents.github.io/google-youtube
 -->
 <polymer-element name="google-youtube"
-                 attributes="videoid playsupported state width height currenttime duration currenttimeformatted durationformatted fractionloaded chromeless thumbnail fluid">
+                 attributes="videoid playsupported state width height currenttime duration currenttimeformatted durationformatted fractionloaded chromeless thumbnail fluid playbackstarted">
   <template>
     <style>
       :host {
@@ -149,6 +149,23 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * @type boolean
        */
       playsupported: null,
+
+      /**
+       * Whether playback has started.
+       *
+       * This defaults to `false` and is set to `true` once the first 'playing' event is fired by
+       * the underlying YouTube Player API.
+       *
+       * Once set to `true`, it will remain that way until the 'ended' event is fired, or until
+       * a new video is cued/loaded, at which point it will reset to `false`.
+       *
+       * Paused/buffering events won't cause `playbackstarted` to reset to `false`.
+       *
+       * @attribute playbackstarted
+       * @type boolean
+       * @default false
+       */
+      playbackstarted: false,
 
       /**
        * Sets the height of the player on the page.
@@ -544,6 +561,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
               // The YouTube Player API only exposes playback data about a video once
               // playback has begun.
               if (this.state == 1) {
+                this.playbackstarted = true;
+
                 // After playback has begun, play() can always be used to resume playback if the video is paused.
                 this.playsupported = true;
 
@@ -558,6 +577,11 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
                 if (this.updatePlaybackStatsInterval) {
                   clearInterval(this.updatePlaybackStatsInterval);
                   this.updatePlaybackStatsInterval = null;
+                }
+
+                // -1: unstarted, 0: ended, 5: video cued
+                if (this.state <= 0 || this.state == 5) {
+                  this.playbackstarted = false;
                 }
               }
 
