@@ -394,6 +394,15 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       },
 
       /**
+       * Clean up the underlying Player `<iframe>` when we're removed from the DOM.
+       */
+      detached: function() {
+        if (this.player) {
+          this.player.destroy();
+        }
+      },
+
+      /**
        * Plays the current video.
        *
        * Note that on certain mobile browsers, playback
