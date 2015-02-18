@@ -509,7 +509,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
           this.pendingVideoId = this.videoid;
         } else {
           // Figure out whether we should cue or load (which will autoplay) the next video.
-          if (this.playsupported && this.attributes['autoplay'].value == '1') {
+          if (this.playsupported && this.attributes['autoplay'] && this.attributes['autoplay'].value == '1') {
             this.player.loadVideoById(this.videoid);
           } else {
             this.player.cueVideoById(this.videoid);
