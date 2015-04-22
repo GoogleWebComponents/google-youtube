@@ -6,7 +6,7 @@
 `google-youtube` encapsulates the YouTube player into a web component.
 
     <google-youtube
-      videoid="..."
+      video-id="..."
       height="270px"
       width="480px"
       rel="0"
@@ -66,17 +66,17 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
     </style>
 
     <div id="container" style$="{{computeContainerStyle(width, height)}}">
-  <!--      <template if="{{thumbnail}}"> FIXME
+      <template is="x-if" if="{{thumbnail}}">
         <img id="thumbnail"
-             src="{{thumbnail}}"
-             title="YouTube video thumbnail."
-             alt="YouTube video thumbnail."
-             on-tap="{{handleThumbnailTap}}">
-      </template> -->
+           src$="{{parent.thumbnail}}"
+           title="YouTube video thumbnail."
+           alt="YouTube video thumbnail."
+           on-tap="handleThumbnailTap">
+      </template>
 
-<!--      <template> if="{{!thumbnail}}"> -->
+      <template is="x-if" if="{{!thumbnail}}">
         <google-youtube-api on-api-load="apiLoad"></google-youtube-api>
- <!--     </template> -->
+      </template>
 
       <!-- Use this._playsupportedLocalStorage as the value, since this.playsupported is set to
            true as soon as initial playback has started, and we don't want that cached. -->
@@ -126,14 +126,14 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
      * You can [search for videos programmatically](https://developers.google.com/youtube/v3/docs/search/list)
      * using the YouTube Data API, or just hardcode known video ids to display on your page.
      *
-     * @attribute videoid
+     * @attribute videoId
      * @type string
      * @default 'mN7IAaRdi_k'
      */
-      videoid: {
+      videoId: {
         type: String,
         value: 'mN7IAaRdi_k',
-        observer: 'videoidChanged'
+        observer: 'videoIdChanged'
       },
 
       /**
@@ -559,7 +559,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       }
     },
 
-    videoidChanged: function() {
+    videoIdChanged: function() {
       this.currenttime = 0;
       this.currenttimeformatted = this.toHHMMSS(0);
       this.fractionloaded = 0;
@@ -567,13 +567,13 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       this.durationformatted = this.toHHMMSS(0);
 
       if (!this.player || !this.player.cueVideoById) {
-        this.pendingVideoId = this.videoid;
+        this.pendingVideoId = this.videoId;
       } else {
         // Figure out whether we should cue or load (which will autoplay) the next video.
         if (this.playsupported && this.attributes['autoplay'] && this.attributes['autoplay'].value == '1') {
-          this.player.loadVideoById(this.videoid);
+          this.player.loadVideoById(this.videoId);
         } else {
-          this.player.cueVideoById(this.videoid);
+          this.player.cueVideoById(this.videoId);
         }
       }
     },
@@ -611,13 +611,13 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       }
 
       this.player = new YT.Player(this.$.player, {
-        videoId: this.videoid,
+        videoId: this.videoId,
         width: '100%',
         height: '100%',
         playerVars: playerVars,
         events: {
           onReady: function(e) {
-            if (this.pendingVideoId && this.pendingVideoId != this.videoid) {
+            if (this.pendingVideoId && this.pendingVideoId != this.videoId) {
               this.player.cueVideoById(this.pendingVideoId);
               this.pendingVideoId = '';
             }
