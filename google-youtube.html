@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../core-localstorage/core-localstorage.html">
+<link rel="import" href="../iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../google-apis/google-youtube-api.html">
 
 <!--
@@ -80,10 +80,10 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 
       <!-- Use this._playsupportedLocalStorage as the value, since this.playsupported is set to
            true as soon as initial playback has started, and we don't want that cached. -->
-      <core-localstorage name="google-youtube-playsupported"
+      <iron-localstorage name="google-youtube-playsupported"
                          value="_playsupportedLocalStorage"
-                         on-core-localstorage-load="_determinePlaySupported">
-      </core-localstorage>
+                         on-iron-localstorage-load="_determinePlaySupported">
+      </iron-localstorage>
 
       <div id="player"></div>
     </div>
@@ -365,7 +365,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
     /**
      * Detects whether programmatic <video>.play() is supported in the current browser.
      *
-     * This is triggered via on-core-localstorage-load. The logic is:
+     * This is triggered via on-ironlocalstorage-load. The logic is:
      * - If playsupported is explicitly set to true or false on the element, use that.
      * - Otherwise, if there's a cached value in localStorage, use that.
      * - Otherwise, create a hidden <video> element and call play() on it:
@@ -495,7 +495,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
         this.player.setVolume(volume);
       }
     },
-    
+
     /**
      * Mutes the current video.
      *
@@ -527,7 +527,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
         this.player.unMute();
       }
     },
-    
+
     /**
      * Pauses the current video.
      *
