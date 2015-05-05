@@ -24,9 +24,9 @@
   "license": "Apache-2.0",
   "homepage": "https://googlewebcomponents.github.io/google-youtube",
   "dependencies": {
-    "iron-localstorage": "PolymerElements/iron-localstorage#0.8-preview",
+    "Polymer": "Polymer/polymer#v0.8.0-rc.7",
     "google-apis": "GoogleWebComponents/google-apis#0.8-preview",
-    "polymer": "Polymer/polymer#0-8.preview"
+    "iron-localstorage": "PolymerElements/iron-localstorage#0.8-preview"
   },
   "devDependencies": {
     "iron-doc-viewer": "PolymerElements/iron-doc-viewer#^0.8.8"
