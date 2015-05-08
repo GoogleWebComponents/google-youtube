@@ -18,10 +18,6 @@
 
 The standard set of [YouTube player events](https://developers.google.com/youtube/iframe_api_reference#Events) are exposed, as well as methods for playing, pausing, seeking to a specific time, and loading a new video.
 
-@element google-youtube
-@blurb Element providing YouTube video playback.
-@status alpha
-@homepage https://googlewebcomponents.github.io/google-youtube
 -->
 <dom-module id="google-youtube">
  <template>
@@ -65,17 +61,17 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       }
     </style>
 
-    <div id="container" style$="{{computeContainerStyle(width, height)}}">
-      <template is="x-if" if="{{thumbnail}}">
+    <div id="container" style$="{{_computeContainerStyle(width, height)}}">
+      <template is="dom-if" if="{{thumbnail}}">
         <img id="thumbnail"
-           src$="{{parent.thumbnail}}"
+           src$="{{thumbnail}}"
            title="YouTube video thumbnail."
            alt="YouTube video thumbnail."
-           on-tap="handleThumbnailTap">
+           on-tap="_handleThumbnailTap">
       </template>
 
-      <template is="x-if" if="{{!thumbnail}}">
-        <google-youtube-api on-api-load="apiLoad"></google-youtube-api>
+      <template is="dom-if" if="{{!thumbnail}}">
+        <google-youtube-api on-api-load="_apiLoad"></google-youtube-api>
       </template>
 
       <!-- Use this._playsupportedLocalStorage as the value, since this.playsupported is set to
@@ -125,15 +121,11 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
      *
      * You can [search for videos programmatically](https://developers.google.com/youtube/v3/docs/search/list)
      * using the YouTube Data API, or just hardcode known video ids to display on your page.
-     *
-     * @attribute videoId
-     * @type string
-     * @default 'mN7IAaRdi_k'
      */
       videoId: {
         type: String,
         value: 'mN7IAaRdi_k',
-        observer: 'videoIdChanged'
+        observer: '_videoIdChanged'
       },
 
       /**
@@ -151,8 +143,6 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * If you would rather not incur the minimal overhead involved in going through this process, you can explicitly set
        * `playsupported` to `true` or `false` when initializing `<google-youtube>`. This is only recommended if you know that
        * your web app will never (or only) be used on mobile browsers.
-       * @attribute playsupported
-       * @type boolean
        */
       playsupported: {
         type: Boolean,
@@ -160,6 +150,13 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
         notify: true
       },
 
+      /**
+       * "1" if video should start automatically
+       */
+      autoplay: {
+        type: Number,
+        value: 0
+      },
       /**
        * Whether playback has started.
        *
@@ -169,10 +166,6 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * Once set to `true`, it will remain that way indefinitely.
        * Paused/buffering/ended events won't cause `playbackstarted` to reset to `false`.
        * Nor will loading a new video into the player.
-       *
-       * @attribute playbackstarted
-       * @type boolean
-       * @default false
        */
       playbackstarted: {
         type: Boolean,
@@ -184,10 +177,6 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * Sets the height of the player on the page.
        * Accepts anything valid for a CSS measurement, e.g. '200px' or '50%'.
        * If the unit of measurement is left off, 'px' is assumed.
-       *
-       * @attribute height
-       * @type string
-       * @default '270px'
        */
       height: {
         type: String,
@@ -198,10 +187,6 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * Sets the width of the player on the page.
        * Accepts anything valid for a CSS measurement, e.g. '200px' or '50%'.
        * If the unit of measurement is left off, 'px' is assumed.
-       *
-       * @attribute width
-       * @type string
-       * @default '480px'
        */
       width: {
         type: String,
@@ -220,10 +205,6 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        *   - 2 (paused)
        *   - 3 (buffering)
        *   - 5 (video cued)
-       *
-       * @attribute state
-       * @type number
-       * @default -1
        */
       state: {
         type: Number,
@@ -235,9 +216,6 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * Exposes the current playback time, in seconds.
        *
        * You can divide this value by the `duration` to determine the playback percentage.
-       *
-       * @attribute currenttime
-       * @type number
        */
       currenttime: {
         type: Number,
@@ -261,10 +239,6 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 
       /**
        * Exposes the current playback time, formatted as a (HH:)MM:SS string.
-       *
-       *
-       * @attribute currenttimeformatted
-       * @type string
        */
       currenttimeformatted: {
         type: String,
@@ -274,9 +248,6 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 
       /**
        * Exposes the video duration, formatted as a (HH:)MM:SS string.
-       *
-       * @attribute durationformatted
-       * @type string
        */
       durationformatted: {
         type: String,
@@ -286,9 +257,6 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 
       /**
        * The fraction of the bytes that have been loaded for the current video, in the range [0-1].
-       *
-       * @attribute fractionloaded
-       * @type number
        */
       fractionloaded: {
         type: Number,
@@ -308,10 +276,6 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        *
        * The "chromeless" player has minimal YouTube branding in cued state, and the native controls
        * will be disabled during playback. Creating your own custom play/pause/etc. controls is recommended.
-       *
-       * @attribute chromeless
-       * @type boolean
-       * @default false
        */
       chromeless: {
         type: Boolean,
@@ -330,10 +294,6 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * Please note that `autoplay=1` won't actually autoplay videos on mobile browsers, so two taps will be required
        * to play the video there. Also, on desktop browsers, setting `autoplay=1` will prevent the playback
        * from [incrementing the view count](https://support.google.com/youtube/answer/1714329) for the video.
-       *
-       * @attribute thumbnail
-       * @type string
-       * @default ''
        */
       thumbnail: {
         type: String,
@@ -347,10 +307,6 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
        * have not been set, the player will fall back to a 16:9 aspect ratio.
        * This is useful for responsive designs where you don't want to
        * introduce letterboxing on your video.
-       *
-       * @attribute fluid
-       * @type boolean
-       * @default false
        */
       fluid: {
         type: Boolean,
@@ -359,7 +315,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
 
     },
 
-    computeContainerStyle: function(width, height) {
+    _computeContainerStyle: function(width, height) {
       return 'width:' + width + '; height:' + height;
     },
     /**
@@ -455,8 +411,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
      * Clean up the underlying Player `<iframe>` when we're removed from the DOM.
      */
     detached: function() {
-      if (this.player) {
-        this.player.destroy();
+      if (this._player) {
+        this._player.destroy();
       }
     },
 
@@ -471,8 +427,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
      * @method play
      */
     play: function() {
-      if (this.player && this.player.playVideo && this.playsupported) {
-        this.player.playVideo();
+      if (this._player && this._player.playVideo && this.playsupported) {
+        this._player.playVideo();
       }
     },
 
@@ -488,8 +444,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
      * @param {number} volume The new volume, an integer between 0 (muted) and 100 (loudest).
      */
     setVolume: function(volume) {
-      if (this.player && this.player.setVolume) {
-        this.player.setVolume(volume);
+      if (this._player && this._player.setVolume) {
+        this._player.setVolume(volume);
       }
     },
 
@@ -504,8 +460,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
      * @method mute
      */
     mute: function() {
-      if (this.player && this.player.mute) {
-        this.player.mute();
+      if (this._player && this._player.mute) {
+        this._player.mute();
       }
     },
 
@@ -520,8 +476,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
      * @method unMute
      */
     unMute: function() {
-      if (this.player && this.player.unMute) {
-        this.player.unMute();
+      if (this._player && this._player.unMute) {
+        this._player.unMute();
       }
     },
 
@@ -531,8 +487,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
      * @method pause
      */
     pause: function() {
-      if (this.player && this.player.pauseVideo) {
-        this.player.pauseVideo();
+      if (this._player && this._player.pauseVideo) {
+        this._player.pauseVideo();
       }
     },
 
@@ -543,44 +499,43 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
      * @param {number} seconds Number of seconds to seek to.
      */
     seekTo: function(seconds) {
-      if (this.player && this.player.seekTo) {
-        this.player.seekTo(seconds, true);
+      if (this._player && this._player.seekTo) {
+        this._player.seekTo(seconds, true);
 
-        // Explicitly call updatePlaybackStats() to ensure that the new playback info is
+        // Explicitly call _updatePlaybackStats() to ensure that the new playback info is
         // reflected in the bound attributes.
         // The 100ms delay is somewhat arbitrary, but the YouTube player does need time to
         // update its internal state following the call to player.seekTo().
         this.async(function() {
-          this.updatePlaybackStats();
+          this._updatePlaybackStats();
         }, null, 100);
       }
     },
 
-    videoIdChanged: function() {
+    _videoIdChanged: function() {
       this.currenttime = 0;
-      this.currenttimeformatted = this.toHHMMSS(0);
+      this.currenttimeformatted = this._toHHMMSS(0);
       this.fractionloaded = 0;
       this.duration = 1;
-      this.durationformatted = this.toHHMMSS(0);
+      this.durationformatted = this._toHHMMSS(0);
 
-      if (!this.player || !this.player.cueVideoById) {
-        this.pendingVideoId = this.videoId;
+      if (!this._player || !this._player.cueVideoById) {
+        this._pendingVideoId = this.videoId;
       } else {
         // Figure out whether we should cue or load (which will autoplay) the next video.
         if (this.playsupported && this.attributes['autoplay'] && this.attributes['autoplay'].value == '1') {
-          this.player.loadVideoById(this.videoId);
+          this._player.loadVideoById(this.videoId);
         } else {
-          this.player.cueVideoById(this.videoId);
+          this._player.cueVideoById(this.videoId);
         }
       }
     },
 
-    player: null,
-    updatePlaybackStatsInterval: null,
-    pendingVideoId: '',
-    autoplay: 0,
+    _player: null,
+    __updatePlaybackStatsInterval: null,
+    _pendingVideoId: '',
 
-    apiLoad: function() {
+    _apiLoad: function() {
       // Establish some defaults. Attributes set on the google-youtube element
       // can override defaults, or specify additional player parameters. See
       // https://developers.google.com/youtube/player_parameters
@@ -607,16 +562,16 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
         playerVars[attribute.nodeName] = attribute.value;
       }
 
-      this.player = new YT.Player(this.$.player, {
+      this._player = new YT.Player(this.$.player, {
         videoId: this.videoId,
         width: '100%',
         height: '100%',
         playerVars: playerVars,
         events: {
           onReady: function(e) {
-            if (this.pendingVideoId && this.pendingVideoId != this.videoId) {
-              this.player.cueVideoById(this.pendingVideoId);
-              this.pendingVideoId = '';
+            if (this._pendingVideoId && this._pendingVideoId != this.videoId) {
+              this._player.cueVideoById(this._pendingVideoId);
+              this._pendingVideoId = '';
             }
 
             this.fire('google-youtube-ready', e);
@@ -632,17 +587,17 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
               // After playback has begun, play() can always be used to resume playback if the video is paused.
               this.playsupported = true;
 
-              this.duration = this.player.getDuration();
-              this.durationformatted = this.toHHMMSS(this.duration);
+              this.duration = this._player.getDuration();
+              this.durationformatted = this._toHHMMSS(this.duration);
 
-              if (!this.updatePlaybackStatsInterval) {
-                this.updatePlaybackStatsInterval = setInterval(this.updatePlaybackStats.bind(this), 1000);
+              if (!this.__updatePlaybackStatsInterval) {
+                this.__updatePlaybackStatsInterval = setInterval(this._updatePlaybackStats.bind(this), 1000);
               }
             } else {
               // We only need to update the stats if the video is playing.
-              if (this.updatePlaybackStatsInterval) {
-                clearInterval(this.updatePlaybackStatsInterval);
-                this.updatePlaybackStatsInterval = null;
+              if (this.__updatePlaybackStatsInterval) {
+                clearInterval(this.__updatePlaybackStatsInterval);
+                this.__updatePlaybackStatsInterval = null;
               }
             }
 
@@ -658,13 +613,13 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       });
     },
 
-    updatePlaybackStats: function() {
-      this.currenttime = Math.round(this.player.getCurrentTime());
-      this.currenttimeformatted = this.toHHMMSS(this.currenttime);
-      this.fractionloaded = this.player.getVideoLoadedFraction();
+    _updatePlaybackStats: function() {
+      this.currenttime = Math.round(this._player.getCurrentTime());
+      this.currenttimeformatted = this._toHHMMSS(this.currenttime);
+      this.fractionloaded = this._player.getVideoLoadedFraction();
     },
 
-    toHHMMSS: function(totalSeconds) {
+    _toHHMMSS: function(totalSeconds) {
       var hours = Math.floor(totalSeconds / 3600);
       totalSeconds -= hours * 3600;
       var minutes = Math.floor(totalSeconds / 60);
@@ -686,7 +641,7 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
       return hourPortion + minutes + ':' + seconds;
     },
 
-    handleThumbnailTap: function() {
+    _handleThumbnailTap: function() {
       this.autoplay = 1;
       this.thumbnail = '';
     }
