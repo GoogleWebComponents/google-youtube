@@ -1,20 +1,17 @@
 {
   "name": "google-youtube",
-  "version": "1.0.6",
   "description": "YouTube video playback web component.",
   "homepage": "https://googlewebcomponents.github.io/google-youtube",
   "main": "google-youtube.html",
+  "version": "2.0.0",
   "authors": [
     "Jeff Posnick <jeffy@google.com>"
   ],
   "license": "Apache-2.0",
   "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests",
-    "../"
+    "/.*",
+    "/test/",
+    "/demo/"
   ],
   "keywords": [
     "google",
@@ -24,8 +21,12 @@
     "web-component"
   ],
   "dependencies": {
-    "core-localstorage": "Polymer/core-localstorage#^0.5.4",
-    "google-apis": "GoogleWebComponents/google-apis#~0.4.3",
-    "polymer": "Polymer/polymer#^0.5.4"
+    "polymer": "Polymer/polymer#v0.9.0-rc.1",
+    "google-apis": "GoogleWebComponents/google-apis#0.8-preview",
+    "iron-localstorage": "PolymerElements/iron-localstorage#v0.9.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "iron-component-page": "PolymerElements/iron-component-page#^0.9.1"
   }
 }
