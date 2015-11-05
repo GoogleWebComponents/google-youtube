@@ -1,4 +1,4 @@
 google-youtube
 =====================
 
-See the [component landing page](https://googlewebcomponents.github.io/google-youtube) for more information.
+See https://elements.polymer-project.org/elements/google-youtube
