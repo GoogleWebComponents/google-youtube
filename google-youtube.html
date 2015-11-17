@@ -539,6 +539,8 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
           this._player.cueVideoById(this.videoId);
         }
       }
+      
+      Polymer.dom(this.root).querySelector("#player").hidden = true;
     },
 
     _player: null,
@@ -652,7 +654,17 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
     },
 
     _handleThumbnailTap: function() {
-      this.autoplay = 1;
+      if (!this._player) {
+        // Player isn't already initialized: flag to autoplay as soon as initialization is done
+        this.autoplay = 1;
+      } else {
+        // Player is already initialized: explicitly start playing
+        Polymer.dom(this.root).querySelector("#player").hidden = false;
+        if (this._player.playVideo && this.playsupported) {
+          this._player.playVideo();
+        }
+      }
+
       this.thumbnail = '';
     }
   });
