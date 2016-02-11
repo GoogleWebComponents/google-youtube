@@ -67,14 +67,16 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
     <div id="container" style$="{{_computeContainerStyle(width, height)}}">
       <template is="dom-if" if="{{thumbnail}}">
         <img id="thumbnail"
-           src$="{{thumbnail}}"
-           title="YouTube video thumbnail."
-           alt="YouTube video thumbnail."
-           on-tap="_handleThumbnailTap">
+             src$="{{thumbnail}}"
+             title="YouTube video thumbnail."
+             alt="YouTube video thumbnail."
+             on-tap="_handleThumbnailTap">
       </template>
 
       <template is="dom-if" if="{{!thumbnail}}">
-        <google-youtube-api on-api-load="_apiLoad"></google-youtube-api>
+        <template is="dom-if" if="{{videoId}}">
+          <google-youtube-api on-api-load="_apiLoad"></google-youtube-api>
+        </template>
       </template>
 
       <!-- Use this._playsupportedLocalStorage as the value, since this.playsupported is set to
@@ -123,12 +125,15 @@ The standard set of [YouTube player events](https://developers.google.com/youtub
      * to load a new video into the player (if `this.autoplay` is set to `1` and `playsupported` is true)
      * or cue a new video otherwise.
      *
+     * The underlying YouTube embed will not be added to the page unless this
+     * value is set.
+     *
      * You can [search for videos programmatically](https://developers.google.com/youtube/v3/docs/search/list)
      * using the YouTube Data API, or just hardcode known video ids to display on your page.
      */
       videoId: {
         type: String,
-        value: 'mN7IAaRdi_k',
+        value: '',
         observer: '_videoIdChanged'
       },
 
