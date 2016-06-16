@@ -728,10 +728,10 @@ Custom property | Description | Default
             this.fire('google-youtube-state-change', e);
           }.bind(this),
           onPlaybackQualityChange: function(e) {
-
+            this.playbackquality = e.data;
           }.bind(this),
           onPlaybackRateChange: function(e) {
-
+            this.playbackrate = e.data;
           }.bind(this),
           onError: function(e) {
             // Set the player state to 0 ('ended'), since playback will have stopped.
