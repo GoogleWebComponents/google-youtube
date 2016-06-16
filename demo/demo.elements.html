@@ -20,12 +20,18 @@
                     duration="{{duration}}"
                     durationformatted="{{durationFormatted}}"
                     fractionloaded="{{fractionLoaded}}"
+                    volume="{{volume}}"
+                    playbackrate="{{playbackRate}}"
+                    playbackquality="{{playbackQuality}}"
                     on-google-youtube-state-change="handleStateChange"
                     on-google-youtube-error="handleYouTubeError">
     </google-youtube>
 
     <div>
       <p>Playback Progress: <span>{{currentTimeFormatted}}</span> / <span>{{durationFormatted}}</span> <progress max="1" value="{{computeProgress(currentTime, duration)}}"></progress></p>
+      <p>Volume: <span>{{volume}}</span></p>
+      <p>Playback Rate: <span>{{playbackRate}}</span></p>
+      <p>Playback Quality: <span>{{playbackQuality}}</span></p>
     </div>
 
     <div>
@@ -73,6 +79,9 @@
       duration: Number,
       durationFormatted: String,
       fractionLoaded: Number,
+      volume: Number,
+      playbackRate: Number,
+      playbackQuality: String,
       events: {
         type: Array,
         value: []
@@ -105,4 +114,3 @@
   });
 
 </script>
-
