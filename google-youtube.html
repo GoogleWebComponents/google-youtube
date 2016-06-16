@@ -58,7 +58,7 @@ Custom property | Description | Default
       width: 100%;
       height: 100%;
     }
-    
+
     iframe {
       @apply(--google-youtube-iframe);
     }
@@ -334,6 +334,32 @@ Custom property | Description | Default
       fluid: {
         type: Boolean,
         value: false
+      },
+
+      /**
+       * This parameter causes the player to begin playing the video at the given number of seconds from the start
+       * of the video. The parameter value is a positive integer.
+       *
+       * Note that similar to the seekTo function, the player will look for the closest keyframe to the time you
+       * specify. This means that sometimes the play head may seek to just before the requested time, usually no more
+       * than around two seconds.
+       */
+      start: {
+        type: Number,
+        value: 0
+      },
+
+      /**
+       * This parameter specifies the time, measured in seconds from the start of the video, when the player should
+       * stop playing the video. The parameter value is a positive integer.
+       *
+       * Note that the time is measured from the beginning of the video and not from either the value of the start
+       * player parameter or the startSeconds parameter, which is used in YouTube Player API functions for loading or
+       * queueing a video.
+       */
+      end: {
+        type: Number,
+        value: 0
       }
 
     },
@@ -554,9 +580,17 @@ Custom property | Description | Default
       } else {
         // Figure out whether we should cue or load (which will autoplay) the next video.
         if (this.playsupported && this.attributes['autoplay'] && this.attributes['autoplay'].value == '1') {
-          this._player.loadVideoById(this.videoId);
+          this._player.loadVideoById({
+            videoId: this.videoId,
+            startSeconds: this.start,
+            endSeconds: this.end
+          });
         } else {
-          this._player.cueVideoById(this.videoId);
+          this._player.cueVideoById({
+            videoId: this.videoId,
+            startSeconds: this.start,
+            endSeconds: this.end
+          });
         }
       }
     },
