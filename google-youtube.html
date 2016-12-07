@@ -121,7 +121,6 @@ Custom property | Description | Default
      * states.
      *
      * @event google-youtube-state-change
-     * @param {Object} e Event parameters.
      */
 
     /**
@@ -130,10 +129,9 @@ Custom property | Description | Default
      * error codes.
      *
      * @event google-youtube-error
-     * @param {Object} e Event parameters.
      */
 
-     properties: {
+    properties: {
       /**
        * Sets the id of the video to play. Changing this attribute will trigger a call
        * to load a new video into the player (if `this.autoplay` is set to `1` and `playsupported` is true)
