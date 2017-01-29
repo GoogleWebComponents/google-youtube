@@ -393,7 +393,7 @@ Custom property | Description | Default
 
             document.body.appendChild(videoElement);
 
-            this.async(() => {
+            window.requestAnimationFrame(() => {
               // Ideally, we'll get a 'playing' event if we're on a browser that supports
               // programmatic play().
               videoElement.onplaying = function(e) {
@@ -552,7 +552,7 @@ Custom property | Description | Default
           // reflected in the bound attributes.
           // The 100ms delay is somewhat arbitrary, but the YouTube player does need time to
           // update its internal state following the call to player.seekTo().
-          this.async(function() {
+          window.requestAnimationFrame(function() {
             this._updatePlaybackStats();
           }, null, 100);
         }
