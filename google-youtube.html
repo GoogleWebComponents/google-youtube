@@ -150,7 +150,7 @@ Custom property | Description | Default
       },
 
       /**
-       * The list parameter, in conjunction with the listType parameter, identifies the content that will * load in the player.
+       * The list parameter, in conjunction with the listType parameter, identifies the content that will load in the player.
        * If the listType parameter value is search, then the list parameter value specifies the search query.
        * If the listType parameter value is user_uploads, then the list parameter value identifies the YouTube channel whose uploaded videos will be loaded.
        * If the listType parameter value is playlist, then the list parameter value specifies a YouTube playlist ID. In the parameter value, you need to prepend the playlist ID with the letters PL as shown in the example below.
@@ -159,7 +159,7 @@ Custom property | Description | Default
        */
       list: {
         type: String,
-        value: null
+        value: ''
       },
 
       /**
@@ -167,6 +167,9 @@ Custom property | Description | Default
        */
       listType: String,
 
+      /**
+       * Decides whether YouTube API should be loaded.
+       */
       shouldLoadApi: {
         type: Boolean,
         computed: '_computeShouldLoadApi(list, videoId)'
