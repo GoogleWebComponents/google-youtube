@@ -3,7 +3,7 @@
   "description": "YouTube video playback web component.",
   "homepage": "https://googlewebcomponents.github.io/google-youtube",
   "main": "google-youtube.html",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "authors": [
     "Jeff Posnick <jeffy@google.com>"
   ],
