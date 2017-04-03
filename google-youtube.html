@@ -88,7 +88,7 @@ Custom property | Description | Default
       </template>
 
       <template is="dom-if" if="{{!thumbnail}}">
-        <template is="dom-if" if="{{videoId}}">
+        <template is="dom-if" if="[[shouldLoadApi]]">
           <google-youtube-api on-api-load="_apiLoad"></google-youtube-api>
         </template>
       </template>
@@ -137,8 +137,8 @@ Custom property | Description | Default
        * to load a new video into the player (if `this.autoplay` is set to `1` and `playsupported` is true)
        * or cue a new video otherwise.
        *
-       * The underlying YouTube embed will not be added to the page unless this
-       * value is set.
+       * The underlying YouTube embed will not be added to the page unless
+       * `videoId` or `list` property is set.
        *
        * You can [search for videos programmatically](https://developers.google.com/youtube/v3/docs/search/list)
        * using the YouTube Data API, or just hardcode known video ids to display on your page.
@@ -147,6 +147,32 @@ Custom property | Description | Default
         type: String,
         value: '',
         observer: '_videoIdChanged'
+      },
+
+      /**
+       * The list parameter, in conjunction with the listType parameter, identifies the content that will load in the player.
+       * If the listType parameter value is search, then the list parameter value specifies the search query.
+       * If the listType parameter value is user_uploads, then the list parameter value identifies the YouTube channel whose uploaded videos will be loaded.
+       * If the listType parameter value is playlist, then the list parameter value specifies a YouTube playlist ID. In the parameter value, you need to prepend the playlist ID with the letters PL as shown in the example below.
+       *
+       * See https://developers.google.com/youtube/player_parameters#list
+       */
+      list: {
+        type: String,
+        value: ''
+      },
+
+      /**
+       * See https://developers.google.com/youtube/player_parameters#listtype
+       */
+      listType: String,
+
+      /**
+       * Decides whether YouTube API should be loaded.
+       */
+      shouldLoadApi: {
+        type: Boolean,
+        computed: '_computeShouldLoadApi(list, videoId)'
       },
 
       /**
@@ -370,6 +396,10 @@ Custom property | Description | Default
 
     _computeContainerStyle: function(width, height) {
       return 'width:' + width + '; height:' + height;
+    },
+
+    _computeShouldLoadApi: function(videoId, list) {
+      return Boolean(videoId || list);
     },
 
     _useExistingPlaySupportedValue: function() {
