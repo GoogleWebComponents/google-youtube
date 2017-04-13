@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0-rc.1",
-    "google-apis": "e111077/google-apis#2.0-preview",
+    "google-apis": "GoogleWebComponents/google-apis#2.0-preview",
     "iron-localstorage": "PolymerElements/iron-localstorage#2.0-preview"
   },
   "devDependencies": {
