@@ -74,50 +74,53 @@
                     height="480px">
     </google-youtube>
   </template>
-</dom-module>
-<script>
-  Polymer({
-    is: 'demo-element',
-    properties: {
-      playSupported: Boolean,
-      state: Number,
-      currentTime: Number,
-      currentTimeFormatted: String,
-      duration: Number,
-      durationFormatted: String,
-      fractionLoaded: Number,
-      volume: Number,
-      playbackRate: Number,
-      playbackQuality: String,
-      events: {
-        type: Array,
-        value: []
-      }
-    },
-    computeProgress: function(currentTime, duration) {
-      return currentTime / duration;
-    },
-    computePlayDisabled: function(state, playSupported) {
-      return state == 1 || state == 3 || !playSupported;
-    },
-    computePauseDisabled: function(state) {
-      return state != 1 && state != 3;
-    },
-    handleStateChange: function(ev) {
-      this.events.push({data: ev.detail.data});
-    },
-    handleYouTubeError: function(ev) {
-      console.error('YouTube playback error', ev.detail);
-    },
-    handlePlayVideo: function(ev) {
-      this.$.googleYouTube.play();
-    },
-    handlePauseVideo: function(ev) {
-      this.$.googleYouTube.pause();
-    },
-    handleCueVideo: function(ev) {
-      this.$.googleYouTube.videoId = this.$.videoId.value;
-    }
-  });
+  <script>
+    Polymer({
+      is: 'demo-element',
+      properties: {
+        playSupported: Boolean,
+        state: Number,
+        currentTime: Number,
+        currentTimeFormatted: String,
+        duration: Number,
+        durationFormatted: String,
+        fractionLoaded: Number,
+        volume: Number,
+        playbackRate: Number,
+        playbackQuality: String,
+        events: {
+          type: Array,
+          value: []
+        }
+      },
+      computeProgress: function(currentTime, duration) {
+        if (currentTime === undefined || duration === undefined) {
+          return 0;
+        }
 
-</script>
+        return currentTime / duration;
+      },
+      computePlayDisabled: function(state, playSupported) {
+        return state == 1 || state == 3 || !playSupported;
+      },
+      computePauseDisabled: function(state) {
+        return state != 1 && state != 3;
+      },
+      handleStateChange: function(ev) {
+        this.events.push({data: ev.detail.data});
+      },
+      handleYouTubeError: function(ev) {
+        console.error('YouTube playback error', ev.detail);
+      },
+      handlePlayVideo: function(ev) {
+        this.$.googleYouTube.play();
+      },
+      handlePauseVideo: function(ev) {
+        this.$.googleYouTube.pause();
+      },
+      handleCueVideo: function(ev) {
+        this.$.googleYouTube.videoId = this.$.videoId.value;
+      }
+    });
+  </script>
+</dom-module>
