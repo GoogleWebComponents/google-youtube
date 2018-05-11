@@ -387,7 +387,17 @@ Custom property | Description | Default
           type: String,
           value: '',
           notify: true
-        }
+        },
+
+        /**
+         * Sets refresh interval in milliseconds for updating playback stats.
+         * YouTube API does not send events for video progress so we have to
+         * call getCurrentTime() manually. Smaller value makes updates smoother.
+         */
+        statsUpdateInterval: {
+          type: Number,
+          value: 1000,
+        },
 
       },
 
@@ -744,7 +754,7 @@ Custom property | Description | Default
                 this.durationformatted = this._toHHMMSS(this.duration);
 
                 if (!this.__updatePlaybackStatsInterval) {
-                  this.__updatePlaybackStatsInterval = setInterval(this._updatePlaybackStats.bind(this), 1000);
+                  this.__updatePlaybackStatsInterval = setInterval(this._updatePlaybackStats.bind(this), this.statsUpdateInterval);
                 }
               } else {
                 // We only need to update the stats if the video is playing.
@@ -773,7 +783,7 @@ Custom property | Description | Default
       },
 
       _updatePlaybackStats: function() {
-        this.currenttime = Math.round(this._player.getCurrentTime());
+        this.currenttime = this._player.getCurrentTime();
         this.currenttimeformatted = this._toHHMMSS(this.currenttime);
         this.fractionloaded = this._player.getVideoLoadedFraction();
         this.volume = this._player.getVolume();
