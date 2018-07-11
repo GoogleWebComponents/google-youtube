@@ -260,6 +260,9 @@ Custom property | Description | Default
         * Exposes the current playback time, in seconds.
         *
         * You can divide this value by the `duration` to determine the playback percentage.
+        *
+        * Default type is int. Setting `statsUpdateInterval` to less than a
+        * second turns it into float to accommodate higher precision.
         */
         currenttime: {
           type: Number,
@@ -393,6 +396,9 @@ Custom property | Description | Default
          * Sets refresh interval in milliseconds for updating playback stats.
          * YouTube API does not send events for video progress so we have to
          * call getCurrentTime() manually. Smaller value makes updates smoother.
+         *
+         * When the value is less than 1 second, `currenttime` becomes float to
+         * accommodate higher precision (default is int).
          */
         statsUpdateInterval: {
           type: Number,
@@ -783,7 +789,11 @@ Custom property | Description | Default
       },
 
       _updatePlaybackStats: function() {
-        this.currenttime = this._player.getCurrentTime();
+        // `currenttime` was int before `statsUpdateInterval` was added.
+        this.currenttime = this.statsUpdateInterval >= 1000
+            ? Math.round(this._player.getCurrentTime())
+            : this._player.getCurrentTime();
+
         this.currenttimeformatted = this._toHHMMSS(this.currenttime);
         this.fractionloaded = this._player.getVideoLoadedFraction();
         this.volume = this._player.getVolume();
