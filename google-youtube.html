@@ -38,6 +38,71 @@ Custom property | Description | Default
 @demo
 -->
 <dom-module id="google-youtube">
+  <style>
+    :host {
+      display: block;
+    }
+
+    :host([fluid]) {
+      width: 100%;
+      max-width: 100%;
+      position: relative;
+    }
+
+    :host([fluid]) iframe,
+    :host([fluid]) #thumbnail {
+      vertical-align: bottom;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+    }
+
+    iframe {
+      @apply(--google-youtube-iframe);
+    }
+
+    #container {
+      max-width: 100%;
+      max-height: 100%;
+      @apply(--google-youtube-container);
+    }
+
+    #thumbnail {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      @apply(--google-youtube-thumbnail);
+    }
+
+    .playicon {
+      visibility: visible;
+      position: absolute;
+      left: 45%;
+      top: 44%;
+      width: 8vw;
+      max-width: 80px;
+      cursor: pointer;
+      z-index: 1;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .playicon:hover {
+      opacity: 1;
+    }
+
+    @media screen and (max-width: 767px) {
+      .playicon {
+        left: 43%;
+        top: 37%;
+        width: 12vw;
+        max-width: 200px;
+      }
+    }
+  </style>
+
   <template>
     <style>
       :host {
@@ -79,6 +144,7 @@ Custom property | Description | Default
     </style>
     <div id="container" style$="{{_computeContainerStyle(width, height)}}">
       <template is="dom-if" if="{{thumbnail}}">
+        <img id="playicon" class="playicon" src="youtube-play-icon.svg" on-tap="_handleThumbnailTap" alt="youtube play button">
         <img id="thumbnail"
              src$="{{thumbnail}}"
              title="YouTube video thumbnail."
