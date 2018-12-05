@@ -511,6 +511,17 @@ Custom property | Description | Default
       },
 
       /**
+      * When the component is attached, we check if we had the player object.
+      * If we have it, it means that previously it has been "destroyed" due to the detached function.
+      * So, we call manually the _apiLoad function
+      */
+      attached: function() {
+        if(this._player) {
+          this._apiLoad();
+        }
+      },
+
+      /**
       * Clean up the underlying Player `<iframe>` when we're removed from the DOM.
       */
       detached: function() {
