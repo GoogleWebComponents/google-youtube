@@ -12,19 +12,49 @@ $_documentContainer.innerHTML = `<dom-module id="demo-element">
     </style>
     <h1><code>&lt;google-youtube&gt;</code> Demo</h1>
     <h3>Full API Demo</h3>
-    <google-youtube id="googleYouTube" playsupported="{{playSupported}}" video-id="mN7IAaRdi_k" state="{{state}}" currenttime="{{currentTime}}" currenttimeformatted="{{currentTimeFormatted}}" duration="{{duration}}" durationformatted="{{durationFormatted}}" fractionloaded="{{fractionLoaded}}" volume="{{volume}}" playbackrate="{{playbackRate}}" playbackquality="{{playbackQuality}}" on-google-youtube-state-change="handleStateChange" on-google-youtube-error="handleYouTubeError">
+    <google-youtube
+        id="googleYouTube"
+        playsupported="{{playSupported}}"
+        video-id="mN7IAaRdi_k"
+        state="{{state}}"
+        currenttime="{{currentTime}}"
+        currenttimeformatted="{{currentTimeFormatted}}"
+        duration="{{duration}}"
+        durationformatted="{{durationFormatted}}"
+        fractionloaded="{{fractionLoaded}}"
+        volume="{{volume}}"
+        playbackrate="{{playbackRate}}"
+        playbackquality="{{playbackQuality}}"
+        on-google-youtube-state-change="handleStateChange"
+        on-google-youtube-error="handleYouTubeError">
     </google-youtube>
 
     <div>
-      <p>Playback Progress: <span>{{currentTimeFormatted}}</span> / <span>{{durationFormatted}}</span> <progress max="1" value="{{computeProgress(currentTime, duration)}}"></progress></p>
+      <p>
+        Playback Progress:
+        <span>{{currentTimeFormatted}}</span>
+        /
+        <span>{{durationFormatted}}</span>
+        <progress max="1" value="{{computeProgress(currentTime, duration)}}"></progress>
+      </p>
       <p>Volume: <span>{{volume}}</span></p>
       <p>Playback Rate: <span>{{playbackRate}}</span></p>
       <p>Playback Quality: <span>{{playbackQuality}}</span></p>
     </div>
 
     <div>
-      <button id="play-video" disabled="{{computePlayDisabled(state, playSupported)}}" on-click="handlePlayVideo">Play</button>
-      <button id="pause-video" disabled="{{computePauseDisabled(state)}}" on-click="handlePauseVideo">Pause</button>
+      <button
+          id="play-video"
+          disabled="{{computePlayDisabled(state, playSupported)}}"
+          on-click="handlePlayVideo">
+        Play
+      </button>
+      <button
+          id="pause-video"
+          disabled="{{computePauseDisabled(state)}}"
+          on-click="handlePauseVideo">
+        Pause
+      </button>
     </div>
 
     <div>
@@ -43,11 +73,19 @@ $_documentContainer.innerHTML = `<dom-module id="demo-element">
     </div>
 
     <h3>Custom Thumbnail Demo</h3>
-    <google-youtube video-id="yRbOSdAe_JU" width="853px" height="480px" thumbnail="//www.polymer-project.org/images/logos/p-logo.svg">
+    <google-youtube
+        video-id="yRbOSdAe_JU"
+        width="853px"
+        height="480px"
+        thumbnail="//www.polymer-project.org/images/logos/p-logo.svg">
     </google-youtube>
 
     <h3>Playlist Demo</h3>
-    <google-youtube list="PLNYkxOF6rcICc687SxHQRuo9TVNOJelSZ" list-type="playlist" width="640px" height="480px">
+    <google-youtube
+        list="PLNYkxOF6rcICc687SxHQRuo9TVNOJelSZ"
+        list-type="playlist"
+        width="640px"
+        height="480px">
     </google-youtube>
   </template>
   
