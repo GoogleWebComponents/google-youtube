@@ -269,7 +269,6 @@ Polymer({
     *
     * You can divide the `currenttime` to determine the playback percentage.
     *
-    * @attribute duration
     * @type number
     */
     duration: {
