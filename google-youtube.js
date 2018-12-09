@@ -268,8 +268,6 @@ Polymer({
     * Exposes the video duration, in seconds.
     *
     * You can divide the `currenttime` to determine the playback percentage.
-    *
-    * @type number
     */
     duration: {
       type: Number,
