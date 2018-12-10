@@ -10,7 +10,7 @@
   "repository": "GoogleWebComponents/google-youtube",
   "homepage": "https://googlewebcomponents.github.io/google-youtube",
   "name": "@google-web-components/google-youtube",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
